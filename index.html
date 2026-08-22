@@ -1,0 +1,3046 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#6c63ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ЛегкоЯзык">
+  <title>ЛегкоЯзык</title>
+  <style>
+:root{
+  --bg:#f8f8fc;--card:#fff;--ink:#20202a;--muted:#747483;--line:#e7e7ef;
+  --accent:#6c63ff;--accent2:#9a8cff;--good:#e6f8eb;--goodline:#81d497;
+  --bad:#ffeded;--badline:#e58e8e;--sun:#fff3cf;--mint:#eef8f3;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app-shell{max-width:720px;margin:0 auto;min-height:100vh;padding-bottom:92px}
+.screen{padding:18px 16px 28px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.logo{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:22px;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.topbar h1{font-size:24px;margin:0;font-weight:900}.topbar p{margin:3px 0 0;color:var(--muted);font-size:14px}
+.spacer{flex:1}.pill{background:var(--sun);padding:9px 11px;border-radius:15px;font-weight:900}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px}
+.hero{background:linear-gradient(135deg,#eaf8f1,#fbfdfc);border-color:#d6eee2}
+.hero-row{display:flex;align-items:center;gap:12px}.flag{font-size:42px}.hero h2{font-size:21px;margin:0 0 5px;font-weight:900}.hero p{margin:0;color:#5d7569;font-weight:700}
+.progress{height:12px;background:#e8e8ee;border-radius:99px;overflow:hidden;margin:17px 0 8px}.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px}
+.progress-line{display:flex;justify-content:space-between;gap:10px;font-weight:800;font-size:14px}
+.assistant{display:flex;gap:12px;align-items:flex-start;background:#fff8e9;border-color:#f1dfb3;margin:14px 0}.bot{font-size:34px;width:52px;height:52px;background:#fff0d9;border-radius:17px;display:grid;place-items:center;flex:0 0 auto}.assistant h3{margin:0 0 5px;font-size:16px}.assistant p{margin:0;color:#6c624b;line-height:1.35}.link-btn{border:0;background:transparent;color:var(--accent);font-weight:900;padding:8px 0 0}
+.actions{display:grid;gap:10px;margin:16px 0}.btn{min-height:56px;border-radius:18px;border:0;padding:14px 18px;font-weight:900;font-size:17px}.btn.primary{background:var(--accent);color:#fff}.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn.soft{background:#eeecff;color:#4d45c8}.btn:disabled{opacity:.45;cursor:default}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px}.stat .num{font-size:21px;font-weight:900;margin:6px 0 2px}.stat small{color:var(--muted)}
+.section-title{font-size:19px;font-weight:900;margin:22px 0 10px}
+.list-card{display:flex;gap:12px;align-items:center;margin-bottom:10px}.iconbox{width:50px;height:50px;border-radius:16px;background:#f1f0ff;display:grid;place-items:center;font-size:25px;flex:0 0 auto}.list-card h3{font-size:16px;margin:0 0 3px}.list-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.3}
+.bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(720px,100%);display:grid;grid-template-columns:repeat(3,1fr);background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 8px max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:10}.navbtn{border:0;background:transparent;border-radius:14px;padding:9px 4px;color:#727281;font-weight:800}.navbtn.active{background:#efedff;color:#4b44c6}.navbtn span{display:block;font-size:21px;margin-bottom:2px}
+.lesson-wrap{min-height:calc(100vh - 36px);display:flex;flex-direction:column}.lesson-card{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:420px}.emoji{font-size:92px;line-height:1}.arabic{font-size:38px;font-weight:900;margin:20px 0 8px;direction:rtl}.pron{font-size:18px;color:#5d5d70;font-weight:700}.translation{font-size:22px;font-weight:900;margin-top:14px}.hint{color:var(--muted);text-align:center;font-size:14px;margin:12px 0}
+.quiz-title{text-align:center;font-size:22px;font-weight:900;margin:8px 0 15px}.quiz-prompt{text-align:center}.quiz-prompt .arabic{font-size:32px}.quiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.picture-option{min-height:138px;background:#fff;border:2px solid var(--line);border-radius:22px;font-size:62px}.text-option{width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px;margin-bottom:10px;font-weight:800}.correct{background:var(--good)!important;border-color:var(--goodline)!important}.wrong{background:var(--bad)!important;border-color:var(--badline)!important}.feedback{text-align:center;font-weight:850;margin:16px 0}
+.stage{display:flex;gap:12px;margin-bottom:10px}.stagebadge{width:46px;height:46px;border-radius:15px;background:#efedff;display:grid;place-items:center;font-weight:900;flex:0 0 auto}.locked{opacity:.55}.stage h3{margin:0 0 4px;font-size:16px}.stage p{margin:0;color:var(--muted);font-size:14px;line-height:1.3}
+.modal-back{position:fixed;inset:0;background:rgba(22,22,30,.42);display:grid;place-items:end center;z-index:30;padding:16px}.modal{width:min(680px,100%);background:#fff;border-radius:28px 28px 20px 20px;padding:20px;max-height:86vh;overflow:auto}.modal h2{margin:0 0 10px}.modal p{line-height:1.45;color:#5e5e6b}.close{float:right;border:0;background:#f0f0f5;border-radius:50%;width:38px;height:38px;font-size:20px}.fact{background:#fff8e9;border:1px solid #f1dfb3;border-radius:18px;padding:14px;color:#695f48}
+.chat{display:grid;gap:10px}.bubble{max-width:86%;padding:13px 14px;border-radius:18px;border:1px solid var(--line);background:#fff}.bubble.botb{justify-self:start}.bubble.userb{justify-self:end;background:#eeecff}.bubble .arabic{font-size:20px;margin:0 0 4px}.bubble small{color:var(--muted)}
+.inputrow{display:flex;gap:8px;margin-top:12px}.inputrow input{flex:1;min-width:0;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:16px}.roundbtn{width:50px;height:50px;border-radius:16px;border:0;background:var(--accent);color:white;font-size:20px}.chips{display:flex;gap:7px;overflow:auto;padding:6px 0}.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 11px;white-space:nowrap;font-weight:800}
+@media(max-width:380px){.screen{padding-left:12px;padding-right:12px}.arabic{font-size:33px}.emoji{font-size:80px}.quiz-grid{gap:8px}.picture-option{min-height:120px;font-size:54px}}
+
+.grow{flex:1;min-width:0}.language-hero{cursor:pointer}.switch-lang{color:var(--accent);font-weight:900;font-size:14px;white-space:nowrap}.coming{margin-top:16px;padding:13px 14px;border-radius:16px;background:#fff8e9;border:1px solid #f1dfb3;font-weight:850;text-align:center}.language-list{display:grid;gap:9px;margin-top:14px}.language-option{width:100%;display:flex;align-items:center;gap:12px;min-height:64px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:18px;padding:10px 12px;color:var(--ink)}.language-option.selected{border-color:#a39dff;background:#f3f1ff}.language-flag{font-size:30px}.language-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.language-copy b{font-size:16px}.language-copy small{color:var(--muted)}
+
+  </style>
+</head>
+<body>
+  <main id="app" class="app-shell" aria-live="polite"></main>
+  <script>
+window.SAUDI_WORDS = [
+  {
+    "id": "sa001",
+    "order": 1,
+    "picture": "👋",
+    "arabic": "السلام عليكم",
+    "pronunciation": "ас-саляму алейкум",
+    "russian": "Здравствуйте / мир вам",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa002",
+    "order": 2,
+    "picture": "🤝",
+    "arabic": "وعليكم السلام",
+    "pronunciation": "уа алейкум ас-салям",
+    "russian": "И вам мир (ответ)",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa003",
+    "order": 3,
+    "picture": "🙂",
+    "arabic": "هلا",
+    "pronunciation": "халя",
+    "russian": "Привет",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa004",
+    "order": 4,
+    "picture": "🙌",
+    "arabic": "هلا والله",
+    "pronunciation": "халя уаллах",
+    "russian": "Привет! / добро пожаловать",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa005",
+    "order": 5,
+    "picture": "🌅",
+    "arabic": "صباح الخير",
+    "pronunciation": "сабах аль-хейр",
+    "russian": "Доброе утро",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa006",
+    "order": 6,
+    "picture": "🌙",
+    "arabic": "مساء الخير",
+    "pronunciation": "маса аль-хейр",
+    "russian": "Добрый вечер",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa007",
+    "order": 7,
+    "picture": "👋",
+    "arabic": "مع السلامة",
+    "pronunciation": "ма ас-саляма",
+    "russian": "До свидания",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa008",
+    "order": 8,
+    "picture": "😊",
+    "arabic": "الله يسلمك",
+    "pronunciation": "аллах йисаллимак",
+    "russian": "Спасибо / пусть Бог хранит тебя",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa009",
+    "order": 9,
+    "picture": "❓",
+    "arabic": "شلونك؟",
+    "pronunciation": "шлонак?",
+    "russian": "Как ты?",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa010",
+    "order": 10,
+    "picture": "👌",
+    "arabic": "تمام",
+    "pronunciation": "тамам",
+    "russian": "Хорошо / всё нормально",
+    "category": "Приветствия"
+  },
+  {
+    "id": "sa011",
+    "order": 11,
+    "picture": "🪪",
+    "arabic": "وش اسمك؟",
+    "pronunciation": "уиш исмак?",
+    "russian": "Как тебя зовут?",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa012",
+    "order": 12,
+    "picture": "🙋",
+    "arabic": "اسمي ...",
+    "pronunciation": "исми ...",
+    "russian": "Меня зовут ...",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa013",
+    "order": 13,
+    "picture": "🌍",
+    "arabic": "من وين أنت؟",
+    "pronunciation": "мин уэйн энта?",
+    "russian": "Ты откуда?",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa014",
+    "order": 14,
+    "picture": "📍",
+    "arabic": "أنا من ...",
+    "pronunciation": "ана мин ...",
+    "russian": "Я из ...",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa015",
+    "order": 15,
+    "picture": "🤝",
+    "arabic": "تشرفنا",
+    "pronunciation": "ташаррафна",
+    "russian": "Приятно познакомиться",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa016",
+    "order": 16,
+    "picture": "✅",
+    "arabic": "إيه",
+    "pronunciation": "эй",
+    "russian": "Да",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa017",
+    "order": 17,
+    "picture": "❌",
+    "arabic": "لا",
+    "pronunciation": "ля",
+    "russian": "Нет",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa018",
+    "order": 18,
+    "picture": "🙏",
+    "arabic": "ممكن؟",
+    "pronunciation": "мумкин?",
+    "russian": "Можно?",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa019",
+    "order": 19,
+    "picture": "💛",
+    "arabic": "شكراً",
+    "pronunciation": "шукран",
+    "russian": "Спасибо",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa020",
+    "order": 20,
+    "picture": "🙂",
+    "arabic": "العفو",
+    "pronunciation": "аль-афу",
+    "russian": "Пожалуйста / не за что",
+    "category": "Знакомство"
+  },
+  {
+    "id": "sa021",
+    "order": 21,
+    "picture": "👉",
+    "arabic": "أبغى",
+    "pronunciation": "абга",
+    "russian": "Я хочу",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa022",
+    "order": 22,
+    "picture": "🙅",
+    "arabic": "ما أبغى",
+    "pronunciation": "ма абга",
+    "russian": "Я не хочу",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa023",
+    "order": 23,
+    "picture": "📍",
+    "arabic": "وين؟",
+    "pronunciation": "уэйн?",
+    "russian": "Где?",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa024",
+    "order": 24,
+    "picture": "⏱️",
+    "arabic": "الحين",
+    "pronunciation": "аль-хин",
+    "russian": "Сейчас",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa025",
+    "order": 25,
+    "picture": "➡️",
+    "arabic": "بعدين",
+    "pronunciation": "баадэйн",
+    "russian": "Потом",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa026",
+    "order": 26,
+    "picture": "👍",
+    "arabic": "زين",
+    "pronunciation": "зейн",
+    "russian": "Хорошо / хороший",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa027",
+    "order": 27,
+    "picture": "🔥",
+    "arabic": "مرّة",
+    "pronunciation": "марра",
+    "russian": "Очень",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa028",
+    "order": 28,
+    "picture": "🤷",
+    "arabic": "ما أدري",
+    "pronunciation": "ма адри",
+    "russian": "Не знаю",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa029",
+    "order": 29,
+    "picture": "😌",
+    "arabic": "عادي",
+    "pronunciation": "ади",
+    "russian": "Нормально / ничего страшного",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa030",
+    "order": 30,
+    "picture": "✅",
+    "arabic": "خلاص",
+    "pronunciation": "халяс",
+    "russian": "Всё / хватит / готово",
+    "category": "Живая речь"
+  },
+  {
+    "id": "sa031",
+    "order": 31,
+    "picture": "💧",
+    "arabic": "موية",
+    "pronunciation": "мойя",
+    "russian": "Вода",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa032",
+    "order": 32,
+    "picture": "☕",
+    "arabic": "قهوة",
+    "pronunciation": "гахуа",
+    "russian": "Кофе",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa033",
+    "order": 33,
+    "picture": "🍵",
+    "arabic": "شاي",
+    "pronunciation": "шай",
+    "russian": "Чай",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa034",
+    "order": 34,
+    "picture": "🍽️",
+    "arabic": "أكل",
+    "pronunciation": "акль",
+    "russian": "Еда",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa035",
+    "order": 35,
+    "picture": "🥖",
+    "arabic": "خبز",
+    "pronunciation": "хубз",
+    "russian": "Хлеб",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa036",
+    "order": 36,
+    "picture": "🍚",
+    "arabic": "رز",
+    "pronunciation": "рузз",
+    "russian": "Рис",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa037",
+    "order": 37,
+    "picture": "🥩",
+    "arabic": "لحم",
+    "pronunciation": "ляхм",
+    "russian": "Мясо",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa038",
+    "order": 38,
+    "picture": "🍗",
+    "arabic": "دجاج",
+    "pronunciation": "даджадж",
+    "russian": "Курица",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa039",
+    "order": 39,
+    "picture": "🥛",
+    "arabic": "حليب",
+    "pronunciation": "халиб",
+    "russian": "Молоко",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa040",
+    "order": 40,
+    "picture": "🧂",
+    "arabic": "سكر",
+    "pronunciation": "суккар",
+    "russian": "Сахар",
+    "category": "Еда и напитки"
+  },
+  {
+    "id": "sa041",
+    "order": 41,
+    "picture": "1️⃣",
+    "arabic": "واحد",
+    "pronunciation": "уахид",
+    "russian": "Один",
+    "category": "Числа"
+  },
+  {
+    "id": "sa042",
+    "order": 42,
+    "picture": "2️⃣",
+    "arabic": "اثنين",
+    "pronunciation": "иснэйн",
+    "russian": "Два",
+    "category": "Числа"
+  },
+  {
+    "id": "sa043",
+    "order": 43,
+    "picture": "3️⃣",
+    "arabic": "ثلاثة",
+    "pronunciation": "саляса",
+    "russian": "Три",
+    "category": "Числа"
+  },
+  {
+    "id": "sa044",
+    "order": 44,
+    "picture": "4️⃣",
+    "arabic": "أربعة",
+    "pronunciation": "арбаа",
+    "russian": "Четыре",
+    "category": "Числа"
+  },
+  {
+    "id": "sa045",
+    "order": 45,
+    "picture": "5️⃣",
+    "arabic": "خمسة",
+    "pronunciation": "хамса",
+    "russian": "Пять",
+    "category": "Числа"
+  },
+  {
+    "id": "sa046",
+    "order": 46,
+    "picture": "6️⃣",
+    "arabic": "ستة",
+    "pronunciation": "ситта",
+    "russian": "Шесть",
+    "category": "Числа"
+  },
+  {
+    "id": "sa047",
+    "order": 47,
+    "picture": "7️⃣",
+    "arabic": "سبعة",
+    "pronunciation": "сабаа",
+    "russian": "Семь",
+    "category": "Числа"
+  },
+  {
+    "id": "sa048",
+    "order": 48,
+    "picture": "8️⃣",
+    "arabic": "ثمانية",
+    "pronunciation": "самания",
+    "russian": "Восемь",
+    "category": "Числа"
+  },
+  {
+    "id": "sa049",
+    "order": 49,
+    "picture": "9️⃣",
+    "arabic": "تسعة",
+    "pronunciation": "тисаа",
+    "russian": "Девять",
+    "category": "Числа"
+  },
+  {
+    "id": "sa050",
+    "order": 50,
+    "picture": "🔟",
+    "arabic": "عشرة",
+    "pronunciation": "ашара",
+    "russian": "Десять",
+    "category": "Числа"
+  },
+  {
+    "id": "sa051",
+    "order": 51,
+    "picture": "🏠",
+    "arabic": "بيت",
+    "pronunciation": "бэйт",
+    "russian": "Дом",
+    "category": "Места"
+  },
+  {
+    "id": "sa052",
+    "order": 52,
+    "picture": "🏨",
+    "arabic": "فندق",
+    "pronunciation": "фундук",
+    "russian": "Отель",
+    "category": "Места"
+  },
+  {
+    "id": "sa053",
+    "order": 53,
+    "picture": "🍽️",
+    "arabic": "مطعم",
+    "pronunciation": "матам",
+    "russian": "Ресторан",
+    "category": "Места"
+  },
+  {
+    "id": "sa054",
+    "order": 54,
+    "picture": "☕",
+    "arabic": "كوفي",
+    "pronunciation": "кофи",
+    "russian": "Кофейня",
+    "category": "Места"
+  },
+  {
+    "id": "sa055",
+    "order": 55,
+    "picture": "🛍️",
+    "arabic": "سوق",
+    "pronunciation": "сук",
+    "russian": "Рынок / магазин",
+    "category": "Места"
+  },
+  {
+    "id": "sa056",
+    "order": 56,
+    "picture": "🏥",
+    "arabic": "مستشفى",
+    "pronunciation": "мусташфа",
+    "russian": "Больница",
+    "category": "Места"
+  },
+  {
+    "id": "sa057",
+    "order": 57,
+    "picture": "💊",
+    "arabic": "صيدلية",
+    "pronunciation": "сайдалия",
+    "russian": "Аптека",
+    "category": "Места"
+  },
+  {
+    "id": "sa058",
+    "order": 58,
+    "picture": "✈️",
+    "arabic": "مطار",
+    "pronunciation": "матар",
+    "russian": "Аэропорт",
+    "category": "Места"
+  },
+  {
+    "id": "sa059",
+    "order": 59,
+    "picture": "🚻",
+    "arabic": "حمام",
+    "pronunciation": "хаммам",
+    "russian": "Туалет",
+    "category": "Места"
+  },
+  {
+    "id": "sa060",
+    "order": 60,
+    "picture": "🛣️",
+    "arabic": "شارع",
+    "pronunciation": "шариа",
+    "russian": "Улица",
+    "category": "Места"
+  },
+  {
+    "id": "sa061",
+    "order": 61,
+    "picture": "➡️",
+    "arabic": "يمين",
+    "pronunciation": "ямин",
+    "russian": "Направо",
+    "category": "Направления"
+  },
+  {
+    "id": "sa062",
+    "order": 62,
+    "picture": "⬅️",
+    "arabic": "يسار",
+    "pronunciation": "ясар",
+    "russian": "Налево",
+    "category": "Направления"
+  },
+  {
+    "id": "sa063",
+    "order": 63,
+    "picture": "⬆️",
+    "arabic": "قدام",
+    "pronunciation": "гуддам",
+    "russian": "Впереди",
+    "category": "Направления"
+  },
+  {
+    "id": "sa064",
+    "order": 64,
+    "picture": "⬇️",
+    "arabic": "ورا",
+    "pronunciation": "уара",
+    "russian": "Сзади",
+    "category": "Направления"
+  },
+  {
+    "id": "sa065",
+    "order": 65,
+    "picture": "👇",
+    "arabic": "هنا",
+    "pronunciation": "хина",
+    "russian": "Здесь",
+    "category": "Направления"
+  },
+  {
+    "id": "sa066",
+    "order": 66,
+    "picture": "👉",
+    "arabic": "هناك",
+    "pronunciation": "хунак",
+    "russian": "Там",
+    "category": "Направления"
+  },
+  {
+    "id": "sa067",
+    "order": 67,
+    "picture": "🤏",
+    "arabic": "قريب",
+    "pronunciation": "гариб",
+    "russian": "Близко",
+    "category": "Направления"
+  },
+  {
+    "id": "sa068",
+    "order": 68,
+    "picture": "🔭",
+    "arabic": "بعيد",
+    "pronunciation": "баид",
+    "russian": "Далеко",
+    "category": "Направления"
+  },
+  {
+    "id": "sa069",
+    "order": 69,
+    "picture": "🚪",
+    "arabic": "ادخل",
+    "pronunciation": "удхуль",
+    "russian": "Входи",
+    "category": "Направления"
+  },
+  {
+    "id": "sa070",
+    "order": 70,
+    "picture": "🚪",
+    "arabic": "اطلع",
+    "pronunciation": "итлаа",
+    "russian": "Выходи / поднимайся",
+    "category": "Направления"
+  },
+  {
+    "id": "sa071",
+    "order": 71,
+    "picture": "💰",
+    "arabic": "بكم هذا؟",
+    "pronunciation": "бикам хада?",
+    "russian": "Сколько это стоит?",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa072",
+    "order": 72,
+    "picture": "💸",
+    "arabic": "غالي",
+    "pronunciation": "гали",
+    "russian": "Дорого",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa073",
+    "order": 73,
+    "picture": "🏷️",
+    "arabic": "رخيص",
+    "pronunciation": "рахис",
+    "russian": "Дёшево",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa074",
+    "order": 74,
+    "picture": "🧾",
+    "arabic": "الحساب",
+    "pronunciation": "аль-хисаб",
+    "russian": "Счёт",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa075",
+    "order": 75,
+    "picture": "💵",
+    "arabic": "كاش",
+    "pronunciation": "каш",
+    "russian": "Наличные",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa076",
+    "order": 76,
+    "picture": "💳",
+    "arabic": "بطاقة",
+    "pronunciation": "битага",
+    "russian": "Карта",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa077",
+    "order": 77,
+    "picture": "👕",
+    "arabic": "مقاس",
+    "pronunciation": "мигас",
+    "russian": "Размер",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa078",
+    "order": 78,
+    "picture": "🔼",
+    "arabic": "كبير",
+    "pronunciation": "кабир",
+    "russian": "Большой",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa079",
+    "order": 79,
+    "picture": "🔽",
+    "arabic": "صغير",
+    "pronunciation": "сагир",
+    "russian": "Маленький",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa080",
+    "order": 80,
+    "picture": "👉",
+    "arabic": "أبغى هذا",
+    "pronunciation": "абга хада",
+    "russian": "Я хочу это",
+    "category": "Покупки"
+  },
+  {
+    "id": "sa081",
+    "order": 81,
+    "picture": "📅",
+    "arabic": "اليوم",
+    "pronunciation": "аль-йоум",
+    "russian": "Сегодня",
+    "category": "Время"
+  },
+  {
+    "id": "sa082",
+    "order": 82,
+    "picture": "➡️",
+    "arabic": "بكرة",
+    "pronunciation": "букра",
+    "russian": "Завтра",
+    "category": "Время"
+  },
+  {
+    "id": "sa083",
+    "order": 83,
+    "picture": "⬅️",
+    "arabic": "أمس",
+    "pronunciation": "амс",
+    "russian": "Вчера",
+    "category": "Время"
+  },
+  {
+    "id": "sa084",
+    "order": 84,
+    "picture": "🌅",
+    "arabic": "الصباح",
+    "pronunciation": "ас-сабах",
+    "russian": "Утро",
+    "category": "Время"
+  },
+  {
+    "id": "sa085",
+    "order": 85,
+    "picture": "🌙",
+    "arabic": "الليل",
+    "pronunciation": "аль-лейль",
+    "russian": "Ночь",
+    "category": "Время"
+  },
+  {
+    "id": "sa086",
+    "order": 86,
+    "picture": "🕐",
+    "arabic": "ساعة",
+    "pronunciation": "саа",
+    "russian": "Час / часы",
+    "category": "Время"
+  },
+  {
+    "id": "sa087",
+    "order": 87,
+    "picture": "⏱️",
+    "arabic": "دقيقة",
+    "pronunciation": "дагига",
+    "russian": "Минута",
+    "category": "Время"
+  },
+  {
+    "id": "sa088",
+    "order": 88,
+    "picture": "🌄",
+    "arabic": "بدري",
+    "pronunciation": "бадри",
+    "russian": "Рано",
+    "category": "Время"
+  },
+  {
+    "id": "sa089",
+    "order": 89,
+    "picture": "🌃",
+    "arabic": "متأخر",
+    "pronunciation": "митааххир",
+    "russian": "Поздно",
+    "category": "Время"
+  },
+  {
+    "id": "sa090",
+    "order": 90,
+    "picture": "❓",
+    "arabic": "متى؟",
+    "pronunciation": "мата?",
+    "russian": "Когда?",
+    "category": "Время"
+  },
+  {
+    "id": "sa091",
+    "order": 91,
+    "picture": "💡",
+    "arabic": "فهمت",
+    "pronunciation": "фахамт",
+    "russian": "Я понял",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa092",
+    "order": 92,
+    "picture": "🤔",
+    "arabic": "ما فهمت",
+    "pronunciation": "ма фахамт",
+    "russian": "Я не понял",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa093",
+    "order": 93,
+    "picture": "🐢",
+    "arabic": "تكلم شوي شوي",
+    "pronunciation": "такаллам шуай шуай",
+    "russian": "Говорите помедленнее",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa094",
+    "order": 94,
+    "picture": "🔁",
+    "arabic": "مرة ثانية",
+    "pronunciation": "марра сания",
+    "russian": "Ещё раз",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa095",
+    "order": 95,
+    "picture": "❓",
+    "arabic": "وش يعني؟",
+    "pronunciation": "уиш яани?",
+    "russian": "Что это значит?",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa096",
+    "order": 96,
+    "picture": "🆘",
+    "arabic": "ساعدني",
+    "pronunciation": "саидни",
+    "russian": "Помоги мне",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa097",
+    "order": 97,
+    "picture": "✋",
+    "arabic": "انتظر",
+    "pronunciation": "интазир",
+    "russian": "Подожди",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa098",
+    "order": 98,
+    "picture": "🚀",
+    "arabic": "يلا",
+    "pronunciation": "ялла",
+    "russian": "Давай / пошли",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa099",
+    "order": 99,
+    "picture": "👍",
+    "arabic": "تمام؟",
+    "pronunciation": "тамам?",
+    "russian": "Всё хорошо? / договорились?",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa100",
+    "order": 100,
+    "picture": "✨",
+    "arabic": "إن شاء الله",
+    "pronunciation": "ин ша Аллах",
+    "russian": "Если Бог пожелает",
+    "category": "Разговор"
+  },
+  {
+    "id": "sa101",
+    "order": 101,
+    "picture": "👨",
+    "arabic": "أبوي",
+    "pronunciation": "абуй",
+    "russian": "Мой отец / папа",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa102",
+    "order": 102,
+    "picture": "👩",
+    "arabic": "أمي",
+    "pronunciation": "умми",
+    "russian": "Моя мама",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa103",
+    "order": 103,
+    "picture": "👦",
+    "arabic": "أخوي",
+    "pronunciation": "ахуй",
+    "russian": "Мой брат",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa104",
+    "order": 104,
+    "picture": "👧",
+    "arabic": "أختي",
+    "pronunciation": "ухти",
+    "russian": "Моя сестра",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa105",
+    "order": 105,
+    "picture": "💍",
+    "arabic": "زوج",
+    "pronunciation": "заудж",
+    "russian": "Муж",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa106",
+    "order": 106,
+    "picture": "💍",
+    "arabic": "زوجة",
+    "pronunciation": "зауджа",
+    "russian": "Жена",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa107",
+    "order": 107,
+    "picture": "👦",
+    "arabic": "ولد",
+    "pronunciation": "уалад",
+    "russian": "Мальчик / сын",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa108",
+    "order": 108,
+    "picture": "👧",
+    "arabic": "بنت",
+    "pronunciation": "бинт",
+    "russian": "Девочка / дочь",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa109",
+    "order": 109,
+    "picture": "👨‍👩‍👧",
+    "arabic": "عيال",
+    "pronunciation": "ийяль",
+    "russian": "Дети / ребята (разг.)",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa110",
+    "order": 110,
+    "picture": "🏡",
+    "arabic": "أهل",
+    "pronunciation": "ахль",
+    "russian": "Семья / родные",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa111",
+    "order": 111,
+    "picture": "🧑‍🤝‍🧑",
+    "arabic": "صاحب",
+    "pronunciation": "сахиб",
+    "russian": "Друг / приятель",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa112",
+    "order": 112,
+    "picture": "👭",
+    "arabic": "صاحبة",
+    "pronunciation": "сахиба",
+    "russian": "Подруга",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa113",
+    "order": 113,
+    "picture": "🧍",
+    "arabic": "شخص",
+    "pronunciation": "шахс",
+    "russian": "Человек",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa114",
+    "order": 114,
+    "picture": "👥",
+    "arabic": "ناس",
+    "pronunciation": "нас",
+    "russian": "Люди",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa115",
+    "order": 115,
+    "picture": "🧒",
+    "arabic": "طفل",
+    "pronunciation": "тифль",
+    "russian": "Ребёнок",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa116",
+    "order": 116,
+    "picture": "👴",
+    "arabic": "كبير السن",
+    "pronunciation": "кабир ас-синн",
+    "russian": "Пожилой человек",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa117",
+    "order": 117,
+    "picture": "🏘️",
+    "arabic": "جار",
+    "pronunciation": "джар",
+    "russian": "Сосед",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa118",
+    "order": 118,
+    "picture": "🎁",
+    "arabic": "ضيف",
+    "pronunciation": "дайф",
+    "russian": "Гость",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa119",
+    "order": 119,
+    "picture": "👨",
+    "arabic": "رجال",
+    "pronunciation": "риджаль",
+    "russian": "Мужчина / мужчины (разг.)",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa120",
+    "order": 120,
+    "picture": "👩",
+    "arabic": "امرأة",
+    "pronunciation": "имраа",
+    "russian": "Женщина",
+    "category": "Люди и семья"
+  },
+  {
+    "id": "sa121",
+    "order": 121,
+    "picture": "🛏️",
+    "arabic": "غرفة",
+    "pronunciation": "гурфа",
+    "russian": "Комната",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa122",
+    "order": 122,
+    "picture": "🍳",
+    "arabic": "مطبخ",
+    "pronunciation": "матбах",
+    "russian": "Кухня",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa123",
+    "order": 123,
+    "picture": "🛋️",
+    "arabic": "مجلس",
+    "pronunciation": "маджлис",
+    "russian": "Гостиная / маджлис",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa124",
+    "order": 124,
+    "picture": "🚪",
+    "arabic": "باب",
+    "pronunciation": "баб",
+    "russian": "Дверь",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa125",
+    "order": 125,
+    "picture": "🪟",
+    "arabic": "شباك",
+    "pronunciation": "шуббак",
+    "russian": "Окно",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa126",
+    "order": 126,
+    "picture": "🔑",
+    "arabic": "مفتاح",
+    "pronunciation": "мифтах",
+    "russian": "Ключ",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa127",
+    "order": 127,
+    "picture": "🛏️",
+    "arabic": "سرير",
+    "pronunciation": "сарир",
+    "russian": "Кровать",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa128",
+    "order": 128,
+    "picture": "🪑",
+    "arabic": "كرسي",
+    "pronunciation": "курси",
+    "russian": "Стул",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa129",
+    "order": 129,
+    "picture": "🪵",
+    "arabic": "طاولة",
+    "pronunciation": "таула",
+    "russian": "Стол",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa130",
+    "order": 130,
+    "picture": "📱",
+    "arabic": "جوال",
+    "pronunciation": "джавваль",
+    "russian": "Мобильный телефон",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa131",
+    "order": 131,
+    "picture": "🔌",
+    "arabic": "شاحن",
+    "pronunciation": "шахин",
+    "russian": "Зарядка",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa132",
+    "order": 132,
+    "picture": "📺",
+    "arabic": "تلفزيون",
+    "pronunciation": "тильфизьон",
+    "russian": "Телевизор",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa133",
+    "order": 133,
+    "picture": "❄️",
+    "arabic": "مكيف",
+    "pronunciation": "мукаййиф",
+    "russian": "Кондиционер",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa134",
+    "order": 134,
+    "picture": "💡",
+    "arabic": "نور",
+    "pronunciation": "нур",
+    "russian": "Свет",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa135",
+    "order": 135,
+    "picture": "🧊",
+    "arabic": "ثلاجة",
+    "pronunciation": "салладжа",
+    "russian": "Холодильник",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa136",
+    "order": 136,
+    "picture": "🧺",
+    "arabic": "غسالة",
+    "pronunciation": "гассала",
+    "russian": "Стиральная машина",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa137",
+    "order": 137,
+    "picture": "🧼",
+    "arabic": "صابون",
+    "pronunciation": "сабун",
+    "russian": "Мыло",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa138",
+    "order": 138,
+    "picture": "🧻",
+    "arabic": "منشفة",
+    "pronunciation": "маншафа",
+    "russian": "Полотенце",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa139",
+    "order": 139,
+    "picture": "👕",
+    "arabic": "ملابس",
+    "pronunciation": "малабис",
+    "russian": "Одежда",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa140",
+    "order": 140,
+    "picture": "👜",
+    "arabic": "شنطة",
+    "pronunciation": "шанта",
+    "russian": "Сумка",
+    "category": "Дом и вещи"
+  },
+  {
+    "id": "sa141",
+    "order": 141,
+    "picture": "🚶",
+    "arabic": "أروح",
+    "pronunciation": "арух",
+    "russian": "Я иду / еду",
+    "category": "Действия"
+  },
+  {
+    "id": "sa142",
+    "order": 142,
+    "picture": "🙋",
+    "arabic": "أجي",
+    "pronunciation": "аджи",
+    "russian": "Я прихожу / приезжаю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa143",
+    "order": 143,
+    "picture": "🍽️",
+    "arabic": "آكل",
+    "pronunciation": "акуль",
+    "russian": "Я ем",
+    "category": "Действия"
+  },
+  {
+    "id": "sa144",
+    "order": 144,
+    "picture": "🥤",
+    "arabic": "أشرب",
+    "pronunciation": "ашраб",
+    "russian": "Я пью",
+    "category": "Действия"
+  },
+  {
+    "id": "sa145",
+    "order": 145,
+    "picture": "😴",
+    "arabic": "أنام",
+    "pronunciation": "анам",
+    "russian": "Я сплю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa146",
+    "order": 146,
+    "picture": "⏰",
+    "arabic": "أصحى",
+    "pronunciation": "асха",
+    "russian": "Я просыпаюсь",
+    "category": "Действия"
+  },
+  {
+    "id": "sa147",
+    "order": 147,
+    "picture": "💼",
+    "arabic": "أشتغل",
+    "pronunciation": "аштагиль",
+    "russian": "Я работаю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa148",
+    "order": 148,
+    "picture": "📚",
+    "arabic": "أدرس",
+    "pronunciation": "адрус",
+    "russian": "Я учусь",
+    "category": "Действия"
+  },
+  {
+    "id": "sa149",
+    "order": 149,
+    "picture": "📖",
+    "arabic": "أقرأ",
+    "pronunciation": "агра",
+    "russian": "Я читаю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa150",
+    "order": 150,
+    "picture": "✍️",
+    "arabic": "أكتب",
+    "pronunciation": "актуб",
+    "russian": "Я пишу",
+    "category": "Действия"
+  },
+  {
+    "id": "sa151",
+    "order": 151,
+    "picture": "👂",
+    "arabic": "أسمع",
+    "pronunciation": "асма",
+    "russian": "Я слышу / слушаю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa152",
+    "order": 152,
+    "picture": "👀",
+    "arabic": "أشوف",
+    "pronunciation": "ашуф",
+    "russian": "Я вижу / смотрю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa153",
+    "order": 153,
+    "picture": "🗣️",
+    "arabic": "أتكلم",
+    "pronunciation": "аткаллам",
+    "russian": "Я говорю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa154",
+    "order": 154,
+    "picture": "❓",
+    "arabic": "أسأل",
+    "pronunciation": "асаль",
+    "russian": "Я спрашиваю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa155",
+    "order": 155,
+    "picture": "💬",
+    "arabic": "أجاوب",
+    "pronunciation": "аджавиб",
+    "russian": "Я отвечаю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa156",
+    "order": 156,
+    "picture": "🔓",
+    "arabic": "أفتح",
+    "pronunciation": "афтах",
+    "russian": "Я открываю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa157",
+    "order": 157,
+    "picture": "🔒",
+    "arabic": "أقفل",
+    "pronunciation": "агфиль",
+    "russian": "Я закрываю",
+    "category": "Действия"
+  },
+  {
+    "id": "sa158",
+    "order": 158,
+    "picture": "🆘",
+    "arabic": "أحتاج",
+    "pronunciation": "ахтадж",
+    "russian": "Мне нужно",
+    "category": "Действия"
+  },
+  {
+    "id": "sa159",
+    "order": 159,
+    "picture": "💪",
+    "arabic": "أقدر",
+    "pronunciation": "агдар",
+    "russian": "Я могу",
+    "category": "Действия"
+  },
+  {
+    "id": "sa160",
+    "order": 160,
+    "picture": "🚶‍♂️",
+    "arabic": "أمشي",
+    "pronunciation": "амши",
+    "russian": "Я иду пешком",
+    "category": "Действия"
+  },
+  {
+    "id": "sa161",
+    "order": 161,
+    "picture": "🚗",
+    "arabic": "سيارة",
+    "pronunciation": "сайяра",
+    "russian": "Машина",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa162",
+    "order": 162,
+    "picture": "🚕",
+    "arabic": "تاكسي",
+    "pronunciation": "такси",
+    "russian": "Такси",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa163",
+    "order": 163,
+    "picture": "🚌",
+    "arabic": "باص",
+    "pronunciation": "бас",
+    "russian": "Автобус",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa164",
+    "order": 164,
+    "picture": "🚆",
+    "arabic": "قطار",
+    "pronunciation": "гитар",
+    "russian": "Поезд",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa165",
+    "order": 165,
+    "picture": "✈️",
+    "arabic": "طيارة",
+    "pronunciation": "тайяра",
+    "russian": "Самолёт",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa166",
+    "order": 166,
+    "picture": "🏍️",
+    "arabic": "دباب",
+    "pronunciation": "даббаб",
+    "russian": "Мотоцикл (сауд. разг.)",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa167",
+    "order": 167,
+    "picture": "🚉",
+    "arabic": "محطة",
+    "pronunciation": "махатта",
+    "russian": "Станция / остановка",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa168",
+    "order": 168,
+    "picture": "🎫",
+    "arabic": "تذكرة",
+    "pronunciation": "тазкара",
+    "russian": "Билет",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa169",
+    "order": 169,
+    "picture": "🛂",
+    "arabic": "جواز",
+    "pronunciation": "джаваз",
+    "russian": "Паспорт",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa170",
+    "order": 170,
+    "picture": "🧳",
+    "arabic": "رحلة",
+    "pronunciation": "рихла",
+    "russian": "Поездка / рейс",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa171",
+    "order": 171,
+    "picture": "🚪",
+    "arabic": "بوابة",
+    "pronunciation": "бавваба",
+    "russian": "Выход / ворота",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa172",
+    "order": 172,
+    "picture": "💺",
+    "arabic": "مقعد",
+    "pronunciation": "магад",
+    "russian": "Место / сиденье",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa173",
+    "order": 173,
+    "picture": "🛣️",
+    "arabic": "طريق",
+    "pronunciation": "тариг",
+    "russian": "Дорога / путь",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa174",
+    "order": 174,
+    "picture": "🚦",
+    "arabic": "زحمة",
+    "pronunciation": "захма",
+    "russian": "Пробка / толпа",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa175",
+    "order": 175,
+    "picture": "⛽",
+    "arabic": "بنزين",
+    "pronunciation": "банзин",
+    "russian": "Бензин",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa176",
+    "order": 176,
+    "picture": "🅿️",
+    "arabic": "موقف",
+    "pronunciation": "маугиф",
+    "russian": "Парковка / остановка",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa177",
+    "order": 177,
+    "picture": "🚕",
+    "arabic": "أبغى تاكسي",
+    "pronunciation": "абга такси",
+    "russian": "Я хочу такси",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa178",
+    "order": 178,
+    "picture": "📍",
+    "arabic": "وقف هنا",
+    "pronunciation": "уаггиф хина",
+    "russian": "Остановитесь здесь",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa179",
+    "order": 179,
+    "picture": "🚉",
+    "arabic": "وين المحطة؟",
+    "pronunciation": "уэйн аль-махатта?",
+    "russian": "Где станция / остановка?",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa180",
+    "order": 180,
+    "picture": "⏳",
+    "arabic": "كم باقي؟",
+    "pronunciation": "кам баги?",
+    "russian": "Сколько осталось?",
+    "category": "Транспорт"
+  },
+  {
+    "id": "sa181",
+    "order": 181,
+    "picture": "🕘",
+    "arabic": "دوام",
+    "pronunciation": "давам",
+    "russian": "Работа / рабочий день",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa182",
+    "order": 182,
+    "picture": "🧰",
+    "arabic": "شغل",
+    "pronunciation": "шугль",
+    "russian": "Работа / дело",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa183",
+    "order": 183,
+    "picture": "🏢",
+    "arabic": "مكتب",
+    "pronunciation": "мактаб",
+    "russian": "Офис / стол",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa184",
+    "order": 184,
+    "picture": "🏭",
+    "arabic": "شركة",
+    "pronunciation": "шарика",
+    "russian": "Компания",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa185",
+    "order": 185,
+    "picture": "👔",
+    "arabic": "مدير",
+    "pronunciation": "мудир",
+    "russian": "Руководитель",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa186",
+    "order": 186,
+    "picture": "🧑‍💼",
+    "arabic": "موظف",
+    "pronunciation": "муаззаф",
+    "russian": "Сотрудник",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa187",
+    "order": 187,
+    "picture": "👥",
+    "arabic": "اجتماع",
+    "pronunciation": "иджтима",
+    "russian": "Встреча / совещание",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa188",
+    "order": 188,
+    "picture": "💬",
+    "arabic": "رسالة",
+    "pronunciation": "рисаля",
+    "russian": "Сообщение / письмо",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa189",
+    "order": 189,
+    "picture": "📞",
+    "arabic": "اتصال",
+    "pronunciation": "иттисаль",
+    "russian": "Звонок / связь",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa190",
+    "order": 190,
+    "picture": "📧",
+    "arabic": "إيميل",
+    "pronunciation": "имейл",
+    "russian": "Электронная почта",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa191",
+    "order": 191,
+    "picture": "🔢",
+    "arabic": "رقم",
+    "pronunciation": "рагам",
+    "russian": "Номер",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa192",
+    "order": 192,
+    "picture": "🏷️",
+    "arabic": "اسم",
+    "pronunciation": "исм",
+    "russian": "Имя / название",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa193",
+    "order": 193,
+    "picture": "📅",
+    "arabic": "موعد",
+    "pronunciation": "мауид",
+    "russian": "Встреча / назначенное время",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa194",
+    "order": 194,
+    "picture": "🚫",
+    "arabic": "مشغول",
+    "pronunciation": "машгуль",
+    "russian": "Занят",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa195",
+    "order": 195,
+    "picture": "✅",
+    "arabic": "فاضي",
+    "pronunciation": "фади",
+    "russian": "Свободен",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa196",
+    "order": 196,
+    "picture": "🏁",
+    "arabic": "خلصت",
+    "pronunciation": "халласт",
+    "russian": "Я закончил",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa197",
+    "order": 197,
+    "picture": "📤",
+    "arabic": "ارسل لي",
+    "pronunciation": "ирсиль ли",
+    "russian": "Отправь мне",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa198",
+    "order": 198,
+    "picture": "📲",
+    "arabic": "كلمني",
+    "pronunciation": "каллимни",
+    "russian": "Позвони / поговори со мной",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa199",
+    "order": 199,
+    "picture": "⏱️",
+    "arabic": "دقيقة لو سمحت",
+    "pronunciation": "дагига лау самахт",
+    "russian": "Минутку, пожалуйста",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa200",
+    "order": 200,
+    "picture": "🤝",
+    "arabic": "نتقابل بكرة",
+    "pronunciation": "нитгабаль букра",
+    "russian": "Встретимся завтра",
+    "category": "Работа и связь"
+  },
+  {
+    "id": "sa201",
+    "order": 201,
+    "picture": "😩",
+    "arabic": "تعبان",
+    "pronunciation": "табан",
+    "russian": "Устал / плохо себя чувствую",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa202",
+    "order": 202,
+    "picture": "🤒",
+    "arabic": "مريض",
+    "pronunciation": "марид",
+    "russian": "Болен",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa203",
+    "order": 203,
+    "picture": "🤕",
+    "arabic": "صداع",
+    "pronunciation": "суда",
+    "russian": "Головная боль",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa204",
+    "order": 204,
+    "picture": "🌡️",
+    "arabic": "حرارة",
+    "pronunciation": "харара",
+    "russian": "Температура / жар",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa205",
+    "order": 205,
+    "picture": "😣",
+    "arabic": "ألم",
+    "pronunciation": "алам",
+    "russian": "Боль",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa206",
+    "order": 206,
+    "picture": "💊",
+    "arabic": "دواء",
+    "pronunciation": "дауа",
+    "russian": "Лекарство",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa207",
+    "order": 207,
+    "picture": "🧑‍⚕️",
+    "arabic": "دكتور",
+    "pronunciation": "дуктур",
+    "russian": "Врач",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa208",
+    "order": 208,
+    "picture": "📅",
+    "arabic": "موعد طبي",
+    "pronunciation": "мауид тибби",
+    "russian": "Приём у врача",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa209",
+    "order": 209,
+    "picture": "🍽️",
+    "arabic": "جوعان",
+    "pronunciation": "джуан",
+    "russian": "Голоден",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa210",
+    "order": 210,
+    "picture": "🥤",
+    "arabic": "عطشان",
+    "pronunciation": "атшан",
+    "russian": "Хочу пить / испытываю жажду",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa211",
+    "order": 211,
+    "picture": "🥶",
+    "arabic": "بردان",
+    "pronunciation": "бардан",
+    "russian": "Мне холодно",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa212",
+    "order": 212,
+    "picture": "🥵",
+    "arabic": "حران",
+    "pronunciation": "харран",
+    "russian": "Мне жарко",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa213",
+    "order": 213,
+    "picture": "😄",
+    "arabic": "مبسوط",
+    "pronunciation": "мабсут",
+    "russian": "Рад / доволен",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa214",
+    "order": 214,
+    "picture": "😞",
+    "arabic": "زعلان",
+    "pronunciation": "заалан",
+    "russian": "Расстроен / сердит",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa215",
+    "order": 215,
+    "picture": "😨",
+    "arabic": "خايف",
+    "pronunciation": "хаиф",
+    "russian": "Боюсь",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa216",
+    "order": 216,
+    "picture": "🏃",
+    "arabic": "مستعجل",
+    "pronunciation": "мустааджиль",
+    "russian": "Спешу",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa217",
+    "order": 217,
+    "picture": "😌",
+    "arabic": "مرتاح",
+    "pronunciation": "муртах",
+    "russian": "Мне комфортно / я отдохнул",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa218",
+    "order": 218,
+    "picture": "⚠️",
+    "arabic": "مشكلة",
+    "pronunciation": "мушкиля",
+    "russian": "Проблема",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa219",
+    "order": 219,
+    "picture": "👌",
+    "arabic": "ما فيه مشكلة",
+    "pronunciation": "ма фих мушкиля",
+    "russian": "Нет проблем",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa220",
+    "order": 220,
+    "picture": "💚",
+    "arabic": "سلامتك",
+    "pronunciation": "саламатак",
+    "russian": "Поправляйся / здоровья тебе",
+    "category": "Самочувствие"
+  },
+  {
+    "id": "sa221",
+    "order": 221,
+    "picture": "🌤️",
+    "arabic": "جو",
+    "pronunciation": "джавв",
+    "russian": "Погода / атмосфера",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa222",
+    "order": 222,
+    "picture": "🥵",
+    "arabic": "حر",
+    "pronunciation": "харр",
+    "russian": "Жара / жарко",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa223",
+    "order": 223,
+    "picture": "🥶",
+    "arabic": "برد",
+    "pronunciation": "бард",
+    "russian": "Холод / холодно",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa224",
+    "order": 224,
+    "picture": "☀️",
+    "arabic": "شمس",
+    "pronunciation": "шамс",
+    "russian": "Солнце",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa225",
+    "order": 225,
+    "picture": "🌧️",
+    "arabic": "مطر",
+    "pronunciation": "матар",
+    "russian": "Дождь",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa226",
+    "order": 226,
+    "picture": "☁️",
+    "arabic": "غيم",
+    "pronunciation": "гейм",
+    "russian": "Облака",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa227",
+    "order": 227,
+    "picture": "💨",
+    "arabic": "هوا",
+    "pronunciation": "хауа",
+    "russian": "Воздух / ветер",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa228",
+    "order": 228,
+    "picture": "💧",
+    "arabic": "رطوبة",
+    "pronunciation": "рутуба",
+    "russian": "Влажность",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa229",
+    "order": 229,
+    "picture": "🌡️",
+    "arabic": "اليوم حر",
+    "pronunciation": "аль-йоум харр",
+    "russian": "Сегодня жарко",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa230",
+    "order": 230,
+    "picture": "🌤️",
+    "arabic": "الجو حلو",
+    "pronunciation": "аль-джавв хилу",
+    "russian": "Погода хорошая",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa231",
+    "order": 231,
+    "picture": "🌊",
+    "arabic": "بحر",
+    "pronunciation": "бахр",
+    "russian": "Море",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa232",
+    "order": 232,
+    "picture": "⛰️",
+    "arabic": "جبل",
+    "pronunciation": "джабаль",
+    "russian": "Гора",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa233",
+    "order": 233,
+    "picture": "🏜️",
+    "arabic": "رمل",
+    "pronunciation": "рамль",
+    "russian": "Песок",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa234",
+    "order": 234,
+    "picture": "🏜️",
+    "arabic": "صحراء",
+    "pronunciation": "сахра",
+    "russian": "Пустыня",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa235",
+    "order": 235,
+    "picture": "🌳",
+    "arabic": "شجرة",
+    "pronunciation": "шаджара",
+    "russian": "Дерево",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa236",
+    "order": 236,
+    "picture": "🌹",
+    "arabic": "ورد",
+    "pronunciation": "уард",
+    "russian": "Цветы / розы",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa237",
+    "order": 237,
+    "picture": "🌅",
+    "arabic": "نهار",
+    "pronunciation": "нахар",
+    "russian": "День / дневное время",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa238",
+    "order": 238,
+    "picture": "➡️",
+    "arabic": "شرق",
+    "pronunciation": "шарг",
+    "russian": "Восток",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa239",
+    "order": 239,
+    "picture": "⬅️",
+    "arabic": "غرب",
+    "pronunciation": "гарб",
+    "russian": "Запад",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa240",
+    "order": 240,
+    "picture": "🧭",
+    "arabic": "شمال",
+    "pronunciation": "шамаль",
+    "russian": "Север",
+    "category": "Погода и природа"
+  },
+  {
+    "id": "sa241",
+    "order": 241,
+    "picture": "🧥",
+    "arabic": "ثوب",
+    "pronunciation": "сауб",
+    "russian": "Тоб / мужская длинная одежда",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa242",
+    "order": 242,
+    "picture": "🧣",
+    "arabic": "شماغ",
+    "pronunciation": "шмаг",
+    "russian": "Шемаг / красно-белый платок",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa243",
+    "order": 243,
+    "picture": "⬜",
+    "arabic": "غترة",
+    "pronunciation": "гутра",
+    "russian": "Гутра / головной платок",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa244",
+    "order": 244,
+    "picture": "🖤",
+    "arabic": "عباية",
+    "pronunciation": "абая",
+    "russian": "Абая",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa245",
+    "order": 245,
+    "picture": "👟",
+    "arabic": "حذاء",
+    "pronunciation": "хиза",
+    "russian": "Обувь",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa246",
+    "order": 246,
+    "picture": "👞",
+    "arabic": "جزمة",
+    "pronunciation": "джазма",
+    "russian": "Ботинок / обувь (разг.)",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa247",
+    "order": 247,
+    "picture": "👔",
+    "arabic": "قميص",
+    "pronunciation": "гамис",
+    "russian": "Рубашка",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa248",
+    "order": 248,
+    "picture": "👖",
+    "arabic": "بنطلون",
+    "pronunciation": "банталун",
+    "russian": "Брюки",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa249",
+    "order": 249,
+    "picture": "🧥",
+    "arabic": "جاكيت",
+    "pronunciation": "джакет",
+    "russian": "Куртка",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa250",
+    "order": 250,
+    "picture": "🎨",
+    "arabic": "لون",
+    "pronunciation": "лаун",
+    "russian": "Цвет",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa251",
+    "order": 251,
+    "picture": "⚪",
+    "arabic": "أبيض",
+    "pronunciation": "абьяд",
+    "russian": "Белый",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa252",
+    "order": 252,
+    "picture": "⚫",
+    "arabic": "أسود",
+    "pronunciation": "асуад",
+    "russian": "Чёрный",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa253",
+    "order": 253,
+    "picture": "🔴",
+    "arabic": "أحمر",
+    "pronunciation": "ахмар",
+    "russian": "Красный",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa254",
+    "order": 254,
+    "picture": "🔵",
+    "arabic": "أزرق",
+    "pronunciation": "азраг",
+    "russian": "Синий",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa255",
+    "order": 255,
+    "picture": "🟢",
+    "arabic": "أخضر",
+    "pronunciation": "ахдар",
+    "russian": "Зелёный",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa256",
+    "order": 256,
+    "picture": "✨",
+    "arabic": "جديد",
+    "pronunciation": "джадид",
+    "russian": "Новый",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa257",
+    "order": 257,
+    "picture": "🕰️",
+    "arabic": "قديم",
+    "pronunciation": "гадим",
+    "russian": "Старый",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa258",
+    "order": 258,
+    "picture": "🧼",
+    "arabic": "نظيف",
+    "pronunciation": "наз̣иф",
+    "russian": "Чистый",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa259",
+    "order": 259,
+    "picture": "🧹",
+    "arabic": "وصخ",
+    "pronunciation": "уасих",
+    "russian": "Грязный (разг.)",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa260",
+    "order": 260,
+    "picture": "😍",
+    "arabic": "جميل",
+    "pronunciation": "джамиль",
+    "russian": "Красивый",
+    "category": "Одежда"
+  },
+  {
+    "id": "sa261",
+    "order": 261,
+    "picture": "❓",
+    "arabic": "وش؟",
+    "pronunciation": "уиш?",
+    "russian": "Что? (сауд. разг.)",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa262",
+    "order": 262,
+    "picture": "🤔",
+    "arabic": "ليه؟",
+    "pronunciation": "лейх?",
+    "russian": "Почему?",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa263",
+    "order": 263,
+    "picture": "❓",
+    "arabic": "كيف؟",
+    "pronunciation": "кейф?",
+    "russian": "Как?",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa264",
+    "order": 264,
+    "picture": "🔢",
+    "arabic": "كم؟",
+    "pronunciation": "кам?",
+    "russian": "Сколько?",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa265",
+    "order": 265,
+    "picture": "👤",
+    "arabic": "مين؟",
+    "pronunciation": "мин?",
+    "russian": "Кто?",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa266",
+    "order": 266,
+    "picture": "👉",
+    "arabic": "أي؟",
+    "pronunciation": "ай?",
+    "russian": "Какой / который?",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa267",
+    "order": 267,
+    "picture": "👉",
+    "arabic": "هذا",
+    "pronunciation": "хада",
+    "russian": "Это / этот",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa268",
+    "order": 268,
+    "picture": "👉",
+    "arabic": "هذي",
+    "pronunciation": "хази",
+    "russian": "Это / эта",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa269",
+    "order": 269,
+    "picture": "👈",
+    "arabic": "ذاك",
+    "pronunciation": "зак",
+    "russian": "Тот",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa270",
+    "order": 270,
+    "picture": "👈",
+    "arabic": "ذيك",
+    "pronunciation": "зик",
+    "russian": "Та",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa271",
+    "order": 271,
+    "picture": "🤝",
+    "arabic": "مع",
+    "pronunciation": "маа",
+    "russian": "С / вместе с",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa272",
+    "order": 272,
+    "picture": "🚫",
+    "arabic": "بدون",
+    "pronunciation": "бидун",
+    "russian": "Без",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa273",
+    "order": 273,
+    "picture": "⏮️",
+    "arabic": "قبل",
+    "pronunciation": "габль",
+    "russian": "До / раньше",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa274",
+    "order": 274,
+    "picture": "⏭️",
+    "arabic": "بعد",
+    "pronunciation": "баад",
+    "russian": "После / потом",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa275",
+    "order": 275,
+    "picture": "💡",
+    "arabic": "لأن",
+    "pronunciation": "лиан",
+    "russian": "Потому что",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa276",
+    "order": 276,
+    "picture": "✋",
+    "arabic": "بس",
+    "pronunciation": "бас",
+    "russian": "Но / только / хватит",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa277",
+    "order": 277,
+    "picture": "🎯",
+    "arabic": "عشان",
+    "pronunciation": "ашан",
+    "russian": "Потому что / чтобы",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa278",
+    "order": 278,
+    "picture": "🔀",
+    "arabic": "إذا",
+    "pronunciation": "иза",
+    "russian": "Если",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa279",
+    "order": 279,
+    "picture": "🤷",
+    "arabic": "يمكن",
+    "pronunciation": "юмкин",
+    "russian": "Может быть",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa280",
+    "order": 280,
+    "picture": "✅",
+    "arabic": "أكيد",
+    "pronunciation": "акид",
+    "russian": "Конечно / точно",
+    "category": "Вопросы и связки"
+  },
+  {
+    "id": "sa281",
+    "order": 281,
+    "picture": "💬",
+    "arabic": "وش عندك؟",
+    "pronunciation": "уиш индак?",
+    "russian": "Что у тебя? / Что случилось?",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa282",
+    "order": 282,
+    "picture": "😌",
+    "arabic": "ما فيه شي",
+    "pronunciation": "ма фих шай",
+    "russian": "Ничего нет / ничего страшного",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa283",
+    "order": 283,
+    "picture": "👉",
+    "arabic": "أبي ...",
+    "pronunciation": "аби ...",
+    "russian": "Я хочу ... (часто в Неджде/Эр-Рияде)",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa284",
+    "order": 284,
+    "picture": "💭",
+    "arabic": "ودي ...",
+    "pronunciation": "уидди ...",
+    "russian": "Мне бы хотелось ...",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa285",
+    "order": 285,
+    "picture": "🚶",
+    "arabic": "خلنا نروح",
+    "pronunciation": "халлина нирух",
+    "russian": "Давай пойдём",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa286",
+    "order": 286,
+    "picture": "👇",
+    "arabic": "تعال هنا",
+    "pronunciation": "тааль хина",
+    "russian": "Иди сюда",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa287",
+    "order": 287,
+    "picture": "👉",
+    "arabic": "روح هناك",
+    "pronunciation": "рух хунак",
+    "russian": "Иди туда",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa288",
+    "order": 288,
+    "picture": "🐢",
+    "arabic": "شوي شوي",
+    "pronunciation": "шуай шуай",
+    "russian": "Потихоньку / помедленнее",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa289",
+    "order": 289,
+    "picture": "✋",
+    "arabic": "لحظة بس",
+    "pronunciation": "лахза бас",
+    "russian": "Секундочку",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa290",
+    "order": 290,
+    "picture": "🆕",
+    "arabic": "توني جيت",
+    "pronunciation": "таввни джейт",
+    "russian": "Я только что пришёл",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa291",
+    "order": 291,
+    "picture": "⏳",
+    "arabic": "للحين",
+    "pronunciation": "лилхин",
+    "russian": "До сих пор / пока ещё",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa292",
+    "order": 292,
+    "picture": "😮",
+    "arabic": "من جد؟",
+    "pronunciation": "мин джад?",
+    "russian": "Серьёзно?",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa293",
+    "order": 293,
+    "picture": "🤨",
+    "arabic": "صدق؟",
+    "pronunciation": "сидг?",
+    "russian": "Правда?",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa294",
+    "order": 294,
+    "picture": "👌",
+    "arabic": "ما عليك",
+    "pronunciation": "ма алейк",
+    "russian": "Не переживай / всё нормально",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa295",
+    "order": 295,
+    "picture": "🙌",
+    "arabic": "أبشر",
+    "pronunciation": "абшир",
+    "russian": "Конечно / сделаю (вежл. сауд.)",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa296",
+    "order": 296,
+    "picture": "💚",
+    "arabic": "الله يعطيك العافية",
+    "pronunciation": "аллах йаатик аль-афия",
+    "russian": "Пусть Бог даст тебе здоровье / спасибо за труд",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa297",
+    "order": 297,
+    "picture": "🤝",
+    "arabic": "حياك الله",
+    "pronunciation": "хайяк аллах",
+    "russian": "Добро пожаловать / рад тебе",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa298",
+    "order": 298,
+    "picture": "👉",
+    "arabic": "تفضل",
+    "pronunciation": "тафаддаль",
+    "russian": "Пожалуйста / проходите / возьмите",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa299",
+    "order": 299,
+    "picture": "🗨️",
+    "arabic": "وش السالفة؟",
+    "pronunciation": "уиш ас-салифа?",
+    "russian": "Что происходит? / В чём дело?",
+    "category": "Живые фразы"
+  },
+  {
+    "id": "sa300",
+    "order": 300,
+    "picture": "🚶",
+    "arabic": "وين رايح؟",
+    "pronunciation": "уэйн райих?",
+    "russian": "Куда идёшь?",
+    "category": "Живые фразы"
+  }
+];
+
+  </script>
+  <script>
+(() => {
+  'use strict';
+
+  const words = window.SAUDI_WORDS || [];
+  const app = document.getElementById('app');
+  const DB_NAME = 'legkoyazyk-db';
+  const DB_VERSION = 1;
+  const STAGES = [
+    ['Старт',0,100,'Поздороваться, представиться и решить простые бытовые задачи'],
+    ['База',100,300,'Строить короткие повседневные фразы'],
+    ['Простые разговоры',300,700,'Поддерживать короткий разговор без постоянного перевода'],
+    ['Повседневная речь',700,1500,'Уверенно общаться в типичных жизненных ситуациях'],
+    ['Уверенный разговор',1500,3000,'Говорить связно и понимать естественную речь'],
+    ['Свободная практика',3000,5000,'Долго разговаривать и думать на языке']
+  ];
+  const FACTS = [
+    'В Саудовской Аравии «هلا والله» — тёплое живое приветствие.',
+    '«يلا» очень часто означает «давай», «пошли» или «ну же».',
+    'В разговорной саудовской речи «أبغى» часто значит «я хочу».',
+    '«ما أدري» — простой разговорный способ сказать «не знаю».',
+    'Короткие готовые фразы обычно полезнее для разговора, чем зубрёжка отдельных слов.'
+  ];
+
+  const LANGUAGES = [
+    {id:'sa',flag:'🇸🇦',name:'Саудовский арабский',ready:true,detail:'300 слов и фраз уже доступны'},
+    {id:'en',flag:'🇬🇧',name:'Английский',ready:false,detail:'курс готовится'},
+    {id:'de',flag:'🇩🇪',name:'Немецкий',ready:false,detail:'курс готовится'},
+    {id:'es',flag:'🇪🇸',name:'Испанский',ready:false,detail:'курс готовится'},
+    {id:'fr',flag:'🇫🇷',name:'Французский',ready:false,detail:'курс готовится'},
+    {id:'it',flag:'🇮🇹',name:'Итальянский',ready:false,detail:'курс готовится'},
+    {id:'tr',flag:'🇹🇷',name:'Турецкий',ready:false,detail:'курс готовится'}
+  ];
+
+  const state = {
+    view:'home', progress:{}, settings:{dailyPoints:0,dailyDate:'',speakingSessions:0,goal:'Свободно общаться',selectedLanguage:'sa'},
+    lesson:[], lessonIndex:0, reveal:false, quizIndex:0, quizResults:{}, quizMode:'meaning', quizOptions:[], selected:null,
+    reviewMode:false, assistantOpen:false, chat:[{user:false,text:'هلا والله! شلونك؟',hint:'Привет! Как ты?'}]
+  };
+
+  function openDb(){
+    return new Promise((resolve,reject)=>{
+      const req=indexedDB.open(DB_NAME,DB_VERSION);
+      req.onupgradeneeded=()=>{
+        const db=req.result;
+        if(!db.objectStoreNames.contains('progress')) db.createObjectStore('progress',{keyPath:'id'});
+        if(!db.objectStoreNames.contains('settings')) db.createObjectStore('settings',{keyPath:'key'});
+      };
+      req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
+    });
+  }
+  async function dbAll(store){ const db=await openDb(); return new Promise((res,rej)=>{const r=db.transaction(store,'readonly').objectStore(store).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}); }
+  async function dbPut(store,val){ const db=await openDb(); return new Promise((res,rej)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).put(val);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);}); }
+  async function loadState(){
+    try{
+      for(const row of await dbAll('progress')) state.progress[row.id]=row;
+      const settings=(await dbAll('settings')).find(x=>x.key==='main'); if(settings) state.settings={...state.settings,...settings.value};
+    }catch(e){ console.warn('IndexedDB unavailable',e); }
+    resetDaily(); render();
+  }
+  function selectedLanguage(){return LANGUAGES.find(x=>x.id===state.settings.selectedLanguage)||LANGUAGES[0];}
+  function courseReady(){return selectedLanguage().id==='sa';}
+  function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+  function resetDaily(){if(state.settings.dailyDate!==today()){state.settings.dailyDate=today();state.settings.dailyPoints=0;saveSettings();}}
+  function saveSettings(){return dbPut('settings',{key:'main',value:state.settings}).catch(()=>{});}
+  function pFor(id){return state.progress[id]||{id,level:0,seen:0,successes:0,errors:0,streak:0,nextReview:0};}
+  function due(p){return !p.nextReview || p.nextReview<=Date.now();}
+  const availableMax = words.reduce((m,w)=>Math.max(m,w.order||0),0);
+  function masteredRange(from,to){return words.filter(w=>w.order>from&&w.order<=to&&pFor(w.id).level>=2).length;}
+  function masteredUpTo(to){return words.filter(w=>w.order<=to&&pFor(w.id).level>=2).length;}
+  function mastered(){return words.filter(w=>pFor(w.id).level>=2).length;}
+  function weak(){return words.filter(w=>pFor(w.id).level===1).length;}
+  function stageUnlocked(i){if(i===0)return true;return masteredUpTo(STAGES[i][1])>=STAGES[i][1];}
+  function stageComplete(i){const s=STAGES[i];if(s[2]>availableMax)return false;return masteredRange(s[1],s[2])>=s[2]-s[1];}
+  function currentStageIndex(){
+    for(let i=0;i<STAGES.length;i++){
+      const s=STAGES[i];
+      if(s[1]>=availableMax) return i;
+      const end=Math.min(s[2],availableMax);
+      if(masteredRange(s[1],end)<end-s[1]) return i;
+    }
+    return STAGES.length-1;
+  }
+  function stageStats(){
+    const i=currentStageIndex(),s=STAGES[i],contentReady=s[1]<availableMax;
+    const end=Math.min(s[2],availableMax), total=Math.max(0,end-s[1]);
+    const done=contentReady?masteredRange(s[1],end):0;
+    return {i,name:s[0],from:s[1],to:s[2],end,total,done,remaining:Math.max(0,total-done),pct:total?Math.round(done/total*100):0,contentReady};
+  }
+  function assistantRole(){const m=mastered();return m<20?'навигатор':m<100?'тренер':'преподаватель';}
+  function assistantMessage(){
+    const st=stageStats(),w=weak();
+    if(mastered()===0)return 'Начнём совсем легко: несколько слов, картинки и звук. Я буду рядом.';
+    if(w>=4)return `У тебя есть ${w} слов, которые стоит освежить. Я незаметно добавлю их в следующие уроки.`;
+    if(!st.contentReady)return `Этап ${st.i+1} уже следующий. Пока закрепим речь и слабые слова — новые уроки этого этапа добавляются.`;
+    if(st.remaining<=10)return `До конца этапа ${st.i+1} осталось ${st.remaining}. Скоро короткая разговорная проверка!`;
+    return `Этап ${st.i+1}: осталось ${st.remaining}. Сегодня смешаем немного нового, повторение и речь.`;
+  }
+  function cultureFact(){const d=new Date();return FACTS[(d.getDate()+d.getMonth())%FACTS.length];}
+
+  function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function activePool(){
+    const st=stageStats();
+    const end=st.contentReady?st.end:availableMax;
+    return words.filter(w=>w.order<=end);
+  }
+  function smartLesson(count=5){
+    const st=stageStats(),pool=activePool();
+    const weakDue=shuffle(pool.filter(w=>pFor(w.id).level===1&&due(pFor(w.id))));
+    const unseen=words.filter(w=>w.order>st.from&&w.order<=st.end&&pFor(w.id).level===0).sort((a,b)=>a.order-b.order);
+    const fresh=st.contentReady?shuffle(unseen.slice(0,Math.min(20,unseen.length))):[];
+    const strongDue=shuffle(pool.filter(w=>pFor(w.id).level>=2&&due(pFor(w.id))));
+    const result=[]; const add=w=>{if(w&&!result.some(x=>x.id===w.id)&&result.length<count)result.push(w)};
+    weakDue.slice(0,Math.min(2,count)).forEach(add); fresh.forEach(add); strongDue.forEach(add);
+    if(result.length<count) shuffle(pool).forEach(add);
+    return result.slice(0,count);
+  }
+  function reviewLesson(count=5){let c=activePool().filter(w=>pFor(w.id).level>0&&due(pFor(w.id)));if(!c.length)c=activePool().filter(w=>pFor(w.id).level>0);if(!c.length)return smartLesson(count);return shuffle(c).sort((a,b)=>pFor(a.id).level-pFor(b.id).level).slice(0,count);}
+
+  async function recordSeen(id){const p={...pFor(id)};p.seen=(p.seen||0)+1;state.progress[id]=p;await dbPut('progress',p).catch(()=>{});}
+  async function recordAnswer(id,ok){
+    const p={...pFor(id)};
+    if(ok){p.successes=(p.successes||0)+1;p.streak=(p.streak||0)+1;if(p.successes>=4&&p.streak>=2)p.level=3;else if(p.successes>=2&&p.streak>=2)p.level=2;else p.level=Math.max(1,p.level);const mins=p.level===1?15:p.level===2?24*60:3*24*60;p.nextReview=Date.now()+mins*60*1000;state.settings.dailyPoints+=10;}
+    else{p.errors=(p.errors||0)+1;p.streak=0;p.level=Math.min(1,Math.max(1,p.level));p.nextReview=Date.now()+5*60*1000;state.settings.dailyPoints+=2;}
+    state.progress[id]=p;await Promise.all([dbPut('progress',p).catch(()=>{}),saveSettings()]);
+  }
+
+  function speak(text,rate=.72){if(!('speechSynthesis'in window))return; speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=rate;speechSynthesis.speak(u);}
+  function e(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function nav(active){return `<nav class="bottomnav"><button class="navbtn ${active==='home'?'active':''}" data-nav="home"><span>📚</span>Учиться</button><button class="navbtn ${active==='teacher'?'active':''}" data-nav="teacher"><span>🗣️</span>Говорить</button><button class="navbtn ${active==='progress'?'active':''}" data-nav="progress"><span>📈</span>Прогресс</button></nav>`;}
+
+  function render(){
+    if(state.view==='lesson') return renderLesson();
+    if(state.view==='quiz') return renderQuiz();
+    if(state.view==='result') return renderResult();
+    if(state.view==='teacher') return renderTeacher();
+    if(state.view==='progress') return renderProgress();
+    renderHome();
+  }
+  function renderHome(){
+    const lang=selectedLanguage();
+    if(!courseReady()){
+      app.innerHTML=`<section class="screen">
+        <header class="topbar"><div class="logo">Aa</div><div><h1>ЛегкоЯзык</h1><p>Коротко, легко — и к живой речи</p></div><div class="spacer"></div><div class="pill">⭐ ${state.settings.dailyPoints}</div></header>
+        <article class="card hero language-hero" data-action="languages"><div class="hero-row"><div class="flag">${lang.flag}</div><div class="grow"><h2>${e(lang.name)}</h2><p>Нажми, чтобы сменить язык</p></div><div class="switch-lang">Сменить ›</div></div><div class="coming">🚧 Этот курс сейчас готовится</div><p class="hint" style="margin:10px 0 0">Мы сохраним отдельный прогресс для каждого языка. Саудовский арабский уже доступен для занятий.</p></article>
+        <article class="card assistant"><div class="bot">🤖</div><div><h3>Твой помощник · навигатор</h3><p>Выбери доступный язык — и я сразу поведу тебя по короткому уроку.</p><button class="link-btn" data-action="languages">Выбрать язык →</button></div></article>
+        <div class="actions"><button class="btn primary" data-action="languages">🌍 Выбрать язык</button></div>
+        <h2 class="section-title">Как будет работать каждый курс</h2>
+        <article class="card list-card"><div class="iconbox">🖼️</div><div><h3>Картинки и короткие тесты</h3><p>Не зубрёжка, а образ → звук → смысл → активный ответ.</p></div></article>
+        <article class="card list-card"><div class="iconbox">🧠</div><div><h3>Пролистал ≠ выучил</h3><p>Прогресс растёт только после нескольких правильных проверок.</p></div></article>
+      </section>${nav('home')}`;
+      bindCommon();
+      return;
+    }
+    const st=stageStats();
+    const cumulativeTarget=st.contentReady?st.end:availableMax;
+    const cumulativeDone=masteredUpTo(cumulativeTarget);
+    const headline=st.contentReady?`Этап ${st.i+1} · ${st.name} · ${cumulativeDone}/${cumulativeTarget} освоено`:`Следующий этап · ${st.name}`;
+    const progressText=st.contentReady?`Осталось ${st.remaining} слов и фраз в этапе`:`Пока закрепляем уже изученные ${availableMax} слов и фраз`;
+    app.innerHTML=`<section class="screen">
+      <header class="topbar"><div class="logo">Aa</div><div><h1>ЛегкоЯзык</h1><p>Коротко, легко — и к живой речи</p></div><div class="spacer"></div><div class="pill">⭐ ${state.settings.dailyPoints}</div></header>
+      <article class="card hero language-hero" data-action="languages"><div class="hero-row"><div class="flag">${lang.flag}</div><div class="grow"><h2>${e(lang.name)}</h2><p>${headline}</p></div><div class="switch-lang">Сменить ›</div></div><div class="progress"><span style="width:${st.contentReady?st.pct:100}%"></span></div><div class="progress-line"><span>${progressText}</span><span>${st.contentReady?st.pct+'%':'✓'}</span></div><p class="hint" style="margin:10px 0 0">Основная разговорная линия — понятная саудовская речь с уклоном в Эр‑Рияд/Неджд.</p></article>
+      <article class="card assistant"><div class="bot">🤖</div><div><h3>Твой помощник · ${assistantRole()}</h3><p>${e(assistantMessage())}</p><button class="link-btn" data-action="assistant">Поговорить со мной →</button></div></article>
+      <div class="stats"><div class="stat"><div>🌱</div><div class="num">${weak()}</div><small>нужно освежить</small></div><div class="stat"><div>🗣️</div><div class="num">${state.settings.speakingSessions}</div><small>разговоров</small></div></div>
+      <div class="actions"><button class="btn primary" data-action="start5">▶ Продолжить · 5 минут</button><button class="btn soft" data-action="start3">⚡ Быстро · 3 минуты</button><button class="btn secondary" data-action="review">↻ Повторить слабые слова</button></div>
+      <h2 class="section-title">Учимся легко</h2>
+      <article class="card list-card"><div class="iconbox">🖼️</div><div><h3>Картинка ↔ слово</h3><p>Образ, звук и смысл связываются в коротких тестах.</p></div></article>
+      <article class="card list-card"><div class="iconbox">👂</div><div><h3>Слушай → выбирай</h3><p>Учимся понимать речь напрямую, без постоянного перевода.</p></div></article>
+      <article class="card list-card"><div class="iconbox">🧠</div><div><h3>Пролистал ≠ выучил</h3><p>Слово засчитывается только после нескольких правильных активных проверок.</p></div></article>
+      <article class="fact"><b>Факт от помощника:</b> ${e(cultureFact())}</article>
+      <button class="btn secondary" style="width:100%;margin-top:14px" data-action="install">📱 Как добавить на экран iPhone</button>
+    </section>${nav('home')}`;
+    bindCommon();
+  }
+
+  function startLesson(items,review=false){state.lesson=items;state.lessonIndex=0;state.reveal=false;state.quizResults={};state.reviewMode=review;state.view='lesson';recordSeen(items[0]?.id);render();}
+  function renderLesson(){
+    const w=state.lesson[state.lessonIndex]; if(!w){state.view='home';return render();}
+    const pct=((state.lessonIndex+1)/state.lesson.length)*100;
+    app.innerHTML=`<section class="screen lesson-wrap"><header class="topbar"><button class="btn secondary" style="min-height:44px;padding:8px 12px" data-action="exit">←</button><div><h1>${e(w.category)}</h1><p>${state.lessonIndex+1}/${state.lesson.length}</p></div></header><div class="progress"><span style="width:${pct}%"></span></div>
+      <article class="card lesson-card"><div class="emoji">${e(w.picture)}</div><div class="arabic">${e(w.arabic)}</div><div class="pron">${e(w.pronunciation)}</div>${state.reveal?`<div class="translation">${e(w.russian)}</div>`:`<button class="btn secondary" data-action="reveal">👁 Показать перевод</button>`}<div style="height:12px"></div><button class="btn soft" data-action="speak">🔊 Слушать</button></article>
+      <p class="hint">Просмотр не считается изучением. Попробуй вспомнить сам — проверка будет после карточек.</p><button class="btn primary" data-action="nextcard">${state.lessonIndex===state.lesson.length-1?'Перейти к тестам':'Дальше'}</button></section>`;
+    bindCommon();
+  }
+
+  function prepareQuiz(){
+    const modes=['meaning','wordPicture','pictureWord','audioPicture'];state.quizMode=modes[Math.floor(Math.random()*modes.length)];
+    const correct=state.lesson[state.quizIndex];let pool=words.filter(w=>w.id!==correct.id);
+    if(state.quizMode.includes('Picture')){const same=pool.filter(w=>w.picture!==correct.picture); if(same.length>=3)pool=same;}
+    state.quizOptions=shuffle([correct,...shuffle(pool).slice(0,3)]);state.selected=null;
+  }
+  function renderQuiz(){
+    const correct=state.lesson[state.quizIndex];if(!correct){state.view='result';return render();}
+    const mode=state.quizMode;let prompt='', options='';
+    if(mode==='meaning'){
+      prompt=`<div class="emoji" style="font-size:58px">${e(correct.picture)}</div><div class="arabic">${e(correct.arabic)}</div>`;
+      options=state.quizOptions.map(w=>textOption(w,w.russian,correct)).join('');
+    }else if(mode==='wordPicture'){
+      prompt=`<div class="arabic">${e(correct.arabic)}</div><div class="pron">${e(correct.pronunciation)}</div><div class="translation">${e(correct.russian)}</div>`;
+      options=`<div class="quiz-grid">${state.quizOptions.map(w=>pictureOption(w,correct)).join('')}</div>`;
+    }else if(mode==='pictureWord'){
+      prompt=`<div class="emoji">${e(correct.picture)}</div><div class="translation">Как это сказать?</div>`;
+      options=state.quizOptions.map(w=>textOption(w,`<span dir="rtl">${e(w.arabic)}</span><br><small>${e(w.pronunciation)}</small>`,correct,true)).join('');
+    }else{
+      prompt=`<div class="emoji" style="font-size:54px">👂</div><button class="btn soft" data-action="audio">🔊 Послушать слово</button><p class="hint">Выбери картинку, которая подходит к услышанному.</p>`;
+      options=`<div class="quiz-grid">${state.quizOptions.map(w=>pictureOption(w,correct)).join('')}</div>`;
+    }
+    const feedback=state.selected?`<div class="feedback">${state.selected===correct.id?'🎉 Отлично!':'🌱 Ничего страшного. Это слово вернётся ещё раз.'}</div><button class="btn primary" data-action="nextquiz">${state.quizIndex===state.lesson.length-1?'Результат':'Следующий вопрос'}</button>`:'';
+    app.innerHTML=`<section class="screen"><header class="topbar"><button class="btn secondary" style="min-height:44px;padding:8px 12px" data-action="exit">←</button><div><h1>Лёгкий тест</h1><p>Вопрос ${state.quizIndex+1} из ${state.lesson.length}</p></div></header><div class="quiz-title">${mode==='meaning'?'Что означает фраза?':mode==='wordPicture'?'Выбери правильную картинку':mode==='pictureWord'?'Картинка → слово':'Слушай → картинка'}</div><div class="quiz-prompt">${prompt}</div><div style="height:18px"></div>${options}${feedback}</section>`;
+    bindCommon();
+  }
+  function clsFor(w,correct){if(!state.selected)return'';if(w.id===correct.id)return' correct';if(w.id===state.selected)return' wrong';return'';}
+  function pictureOption(w,correct){return `<button class="picture-option${clsFor(w,correct)}" data-answer="${w.id}" ${state.selected?'disabled':''}>${e(w.picture)}</button>`;}
+  function textOption(w,label,correct,html=false){return `<button class="text-option${clsFor(w,correct)}" data-answer="${w.id}" ${state.selected?'disabled':''}>${html?label:e(label)}</button>`;}
+
+  function renderResult(){const total=state.lesson.length,correct=Object.values(state.quizResults).filter(Boolean).length,pct=total?Math.round(correct/total*100):0;const st=stageStats();
+    const status=st.contentReady?`Этап ${st.i+1}: ${st.done}/${st.total} · осталось ${st.remaining}`:`Доступная база ${availableMax}/${availableMax} закреплена — продолжаем разговорную практику`;
+    app.innerHTML=`<section class="screen" style="padding-top:60px;text-align:center"><div class="emoji" style="font-size:74px">${pct>=80?'🎉':'🌱'}</div><h1>${state.reviewMode?'Повторение готово!':'Урок готов!'}</h1><p style="font-size:20px;font-weight:900">${correct} из ${total} верно</p><article class="card"><p style="line-height:1.5;margin:0">${pct>=80?'Отлично. Но слово станет «освоенным» только после повторных успешных проверок в будущем.':'Ошибочные слова не потеряны — они автоматически вернутся в следующих коротких уроках.'}</p></article><div style="height:14px"></div><b>${status}</b><div class="actions"><button class="btn primary" data-action="home">Продолжить обучение</button><button class="btn secondary" data-action="teacher">🗣️ Немного поговорить</button></div></section>`;bindCommon();}
+
+  function renderProgress(){
+    const lang=selectedLanguage();
+    if(!courseReady()){
+      app.innerHTML=`<section class="screen"><header class="topbar"><div><h1>Твой путь</h1><p>У каждого языка будет отдельный прогресс</p></div></header><article class="card hero"><div class="hero-row"><div class="flag">${lang.flag}</div><div><h2>${e(lang.name)}</h2><p>Курс готовится</p></div></div></article><article class="card" style="margin-top:14px"><b>Прогресс не смешивается</b><p style="color:var(--muted);line-height:1.4">Когда курс станет доступен, его слова, слабые места, этапы и разговорная практика будут храниться отдельно от других языков.</p><button class="btn primary" style="width:100%;margin-top:10px" data-action="languages">Сменить язык</button></article></section>${nav('progress')}`;
+      bindCommon();return;
+    }
+    const st=stageStats();const cumulative=masteredUpTo(availableMax);app.innerHTML=`<section class="screen"><header class="topbar"><div><h1>Твой путь</h1><p>Считаем реальные знания, а не просмотры</p></div></header><article class="card hero"><div class="hero-row"><div class="flag">🇸🇦</div><div><h2>Саудовский арабский</h2><p>${cumulative} из ${availableMax} доступных слов и фраз освоено</p></div></div><div class="progress"><span style="width:${Math.round(cumulative/availableMax*100)}%"></span></div><div class="progress-line"><span>Текущий этап: ${st.i+1} · ${st.name}</span><span>Слабых: ${weak()}</span></div></article><h2 class="section-title">Этапы</h2>${STAGES.map((s,i)=>{const content=s[1]<availableMax;const end=Math.min(s[2],availableMax);const total=Math.max(0,end-s[1]);const done=content?masteredRange(s[1],end):0;const unlocked=stageUnlocked(i)&&content;const completed=content&&s[2]<=availableMax&&done>=total;const badge=completed?'✓':unlocked?String(i+1):'🔒';const detail=content?`${done}/${total} в этапе · цель до ${s[2]} слов и выражений`:`Контент этого этапа будет добавлен следующим`;return `<article class="card stage ${unlocked?'':'locked'}"><div class="stagebadge">${badge}</div><div><h3>Этап ${i+1} · ${s[0]}</h3><p>${detail}<br>${s[3]}</p></div></article>`}).join('')}<article class="fact"><b>Как засчитывается слово:</b> просмотр карточки = 0. Нужно минимум несколько успешных активных проверок. Ошибка возвращает слово в ближайшие повторения.</article><article class="card" style="margin-top:12px"><b>Сейчас в курсе: ${availableMax} слов и фраз</b><p style="color:var(--muted);line-height:1.4">Этап 1 содержит 100, Этап 2 добавляет ещё 200. После их закрепления курс продолжится этапами 3–6 до 5000+ слов, выражений и разговорных конструкций.</p></article><article class="card" style="margin-top:12px"><b>Сохранение сейчас</b><p style="color:var(--muted);line-height:1.4">Прогресс хранится на этом устройстве в IndexedDB и работает офлайн. Для переноса между iPhone, Android и компьютером следующим серверным этапом подключим аккаунт и облачную синхронизацию.</p></article></section>${nav('progress')}`;bindCommon();}
+
+  function coachReply(input){const t=input.toLowerCase();if(t.includes('привет')||t.includes('هلا')||t.includes('السلام'))return ['هلا والله! شلونك؟','Привет! Как ты?'];if(t.includes('коф')||t.includes('قهوة'))return ['تمام. قل: أبغى قهوة، لو سمحت.','Хорошо. Скажи: «Я хочу кофе, пожалуйста».'];if(t.includes('вод')||t.includes('موية'))return ['ممتاز! قل: أبغى موية.','Отлично! Скажи: «Я хочу воды».'];if(t.includes('не понимаю')||t.includes('ما فهمت'))return ['عادي. قل: ما فهمت، تكلم شوي شوي.','Ничего страшного. Скажи: «Я не понял, говорите помедленнее».'];return ['زين! خلنا نجرب: أبغى هذا.','Хорошо! Попробуем: «Я хочу это».'];}
+  function renderTeacher(){app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Сначала веду по приложению, потом всё больше говорим</p></div></header><article class="fact"><b>Пока офлайн-ядро:</b> простые разговоры уже работают. Для настоящего свободного ИИ-диалога нужен защищённый сервер, чтобы ключ модели не лежал в браузере.</article><div class="chat" style="margin-top:14px">${state.chat.map(x=>`<div class="bubble ${x.user?'userb':'botb'}"><div class="arabic">${e(x.text)}</div>${x.hint?`<small>${e(x.hint)}</small>`:''}${!x.user?`<div><button class="link-btn" data-say="${e(x.text)}">🔊 Слушать</button></div>`:''}</div>`).join('')}</div><div class="chips"><button class="chip" data-chip="تمام">تمام</button><button class="chip" data-chip="أبغى قهوة">أبغى قهوة</button><button class="chip" data-chip="ما فهمت">ما فهمت</button><button class="chip" data-chip="أبغى موية">أبغى موية</button></div><div class="inputrow"><input id="chatInput" placeholder="Напиши ответ…" autocomplete="off"><button class="roundbtn" data-action="send">➤</button></div></section>${nav('teacher')}`;bindCommon();}
+
+  function showModal(type){
+    let body='';
+    if(type==='install'){
+      body=`<button class="close" data-action="close">×</button><h2>Добавить на iPhone</h2><p>1. Открой сайт в Safari.<br>2. Нажми кнопку «Поделиться».<br>3. Выбери «На экран Домой».<br>4. Нажми «Добавить».</p><p>После этого «ЛегкоЯзык» будет открываться с отдельной иконки почти как обычное приложение.</p>`;
+    }else if(type==='languages'){
+      const current=selectedLanguage().id;
+      body=`<button class="close" data-action="close">×</button><h2>🌍 Выбери язык</h2><p>У каждого языка будет свой отдельный прогресс.</p><div class="language-list">${LANGUAGES.map(l=>`<button class="language-option ${l.id===current?'selected':''}" data-lang="${l.id}"><span class="language-flag">${l.flag}</span><span class="language-copy"><b>${e(l.name)}</b><small>${e(l.detail)}</small></span><span>${l.id===current?'✓':l.ready?'›':'скоро'}</span></button>`).join('')}</div>`;
+    }else{
+      body=`<button class="close" data-action="close">×</button><h2>🤖 Твой помощник</h2><p><b>Сейчас я ${assistantRole()}.</b></p><p>${e(assistantMessage())}</p><div class="fact"><b>Небольшой факт:</b> ${e(cultureFact())}</div><button class="btn primary" style="width:100%;margin-top:14px" data-action="teacher">Поговорить</button>`;
+    }
+    document.body.insertAdjacentHTML('beforeend',`<div class="modal-back" id="modal"><div class="modal">${body}</div></div>`);bindCommon(document.getElementById('modal'));
+  }
+
+  function bindCommon(root=document){
+    root.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.view=b.dataset.nav;render()});
+    root.querySelectorAll('[data-action]').forEach(b=>b.onclick=async()=>{
+      const a=b.dataset.action;
+      if(a==='start5')startLesson(smartLesson(5));
+      else if(a==='start3')startLesson(smartLesson(3));
+      else if(a==='review')startLesson(reviewLesson(5),true);
+      else if(a==='assistant')showModal('assistant');
+      else if(a==='languages')showModal('languages');
+      else if(a==='install')showModal('install');
+      else if(a==='close')document.getElementById('modal')?.remove();
+      else if(a==='exit'){state.view='home';render();}
+      else if(a==='reveal'){state.reveal=true;render();}
+      else if(a==='speak'){const w=state.lesson[state.lessonIndex];speak(w.arabic,.62);}
+      else if(a==='nextcard'){
+        if(state.lessonIndex<state.lesson.length-1){state.lessonIndex++;state.reveal=false;await recordSeen(state.lesson[state.lessonIndex].id);render();}
+        else{state.quizIndex=0;prepareQuiz();state.view='quiz';render();}
+      }
+      else if(a==='audio'){speak(state.lesson[state.quizIndex].arabic,.62);}
+      else if(a==='nextquiz'){
+        if(state.quizIndex<state.lesson.length-1){state.quizIndex++;prepareQuiz();render();}else{state.view='result';render();}
+      }
+      else if(a==='home'){state.view='home';render();}
+      else if(a==='teacher'){document.getElementById('modal')?.remove();state.view='teacher';render();}
+      else if(a==='send'){sendChat();}
+    });
+    root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=async()=>{
+      state.settings.selectedLanguage=b.dataset.lang;
+      await saveSettings();
+      document.getElementById('modal')?.remove();
+      state.view='home';
+      render();
+    });
+    root.querySelectorAll('[data-answer]').forEach(b=>b.onclick=async()=>{if(state.selected)return;const id=b.dataset.answer;const correct=state.lesson[state.quizIndex];state.selected=id;const ok=id===correct.id;state.quizResults[correct.id]=ok;await recordAnswer(correct.id,ok);render();});
+    root.querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(b.dataset.say,.68));
+    root.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{const inp=document.getElementById('chatInput');if(inp){inp.value=b.dataset.chip;inp.focus();}});
+    const inp=root.querySelector('#chatInput');if(inp)inp.onkeydown=e=>{if(e.key==='Enter')sendChat();};
+  }
+  async function sendChat(){const inp=document.getElementById('chatInput');if(!inp)return;const text=inp.value.trim();if(!text)return;state.chat.push({user:true,text,hint:''});inp.value='';const [reply,hint]=coachReply(text);state.chat.push({user:false,text:reply,hint});state.settings.speakingSessions++;state.settings.dailyPoints+=20;await saveSettings();render();setTimeout(()=>speak(reply,.68),100);}
+
+  loadState();
+})();
+
+  </script>
+</body>
+</html>
