@@ -3105,14 +3105,22 @@ window.SAUDI_WORDS = [
     return String(response||'').trim();
   }
   async function askAI(userText,{silent=false}={}){
-    if(!window.puter?.ai?.chat) throw new Error('AI service unavailable');
+    if(!window.puter?.ai?.chat){
+      throw new Error('Puter AI не загрузился');
+    }
     const history=state.aiHistory.slice(-10);
     const messages=[{role:'system',content:aiSystemPrompt()},...history,{role:'user',content:userText}];
-    const response=await puter.ai.chat(messages,{model:'liquid/lfm-2.5-1.2b-instruct:free'});
-    const reply=aiText(response)||coachReply(userText)[0];
-    state.aiHistory.push({role:'user',content:userText},{role:'assistant',content:reply});
-    if(state.aiHistory.length>20)state.aiHistory=state.aiHistory.slice(-20);
-    return reply;
+    try{
+      const response=await puter.ai.chat(messages,{model:'liquid/lfm-2.5-2.6b:free'});
+      const reply=aiText(response);
+      if(!reply) throw new Error('ИИ вернул пустой ответ');
+      state.aiHistory.push({role:'user',content:userText},{role:'assistant',content:reply});
+      if(state.aiHistory.length>20)state.aiHistory=state.aiHistory.slice(-20);
+      return reply;
+    }catch(err){
+      console.error('AI error:',err);
+      throw err;
+    }
   }
   function stopLiveMedia(){
     try{if(state.liveRAF)cancelAnimationFrame(state.liveRAF);}catch(e){}
@@ -3147,9 +3155,12 @@ window.SAUDI_WORDS = [
       if(state.liveActive)await beginAutoListening();
     }catch(err){
       console.warn(err);
+      state.liveError='ИИ сейчас не подключился к интернет-сервису. Я включил простой офлайн-режим, а живой ИИ попробуем снова при следующем запуске разговора.';
       const fallback='Привет! Давай совсем легко. شلونك؟ Как ты сегодня?';
       state.chat.push({user:false,text:fallback,hint:''});
-      renderTeacher();await speakNatural(fallback,.74);
+      renderTeacher();
+      voiceMessage(state.liveError);
+      await speakNatural(fallback,.74);
       if(state.liveActive)await beginAutoListening();
     }
   }
@@ -3223,8 +3234,11 @@ window.SAUDI_WORDS = [
       if(state.liveActive)await beginAutoListening();
     }catch(err){
       console.warn(err);
+      state.liveError='Связь с ИИ временно не сработала. Продолжаю простым офлайн-ответом.';
       const fallback=coachReply(state.chat[state.chat.length-1]?.text||'')[0]||'Давай ещё раз, совсем спокойно.';
-      state.chat.push({user:false,text:fallback,hint:''});renderTeacher();
+      state.chat.push({user:false,text:fallback,hint:''});
+      renderTeacher();
+      voiceMessage(state.liveError);
       await speakNatural(fallback,.72);
       if(state.liveActive)await beginAutoListening();
     }
