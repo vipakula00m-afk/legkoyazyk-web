@@ -46,7 +46,10 @@ button{cursor:pointer}
 
 .grow{flex:1;min-width:0}.language-hero{cursor:pointer}.switch-lang{color:var(--accent);font-weight:900;font-size:14px;white-space:nowrap}.coming{margin-top:16px;padding:13px 14px;border-radius:16px;background:#fff8e9;border:1px solid #f1dfb3;font-weight:850;text-align:center}.language-list{display:grid;gap:9px;margin-top:14px}.language-option{width:100%;display:flex;align-items:center;gap:12px;min-height:64px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:18px;padding:10px 12px;color:var(--ink)}.language-option.selected{border-color:#a39dff;background:#f3f1ff}.language-flag{font-size:30px}.language-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.language-copy b{font-size:16px}.language-copy small{color:var(--muted)}
 
+.live-panel{margin-top:14px;padding:18px;border-radius:24px;background:linear-gradient(135deg,#f0efff,#fff);border:1px solid #dedaff;text-align:center}.live-orb{width:92px;height:92px;border-radius:50%;margin:4px auto 12px;display:grid;place-items:center;font-size:42px;background:#fff;border:2px solid #d8d4ff;box-shadow:0 8px 28px rgba(70,60,180,.10)}.live-orb.listening{animation:pulse 1.25s ease-in-out infinite;background:#edf8f2;border-color:#9ed7b0}.live-orb.thinking{animation:pulse 1.6s ease-in-out infinite;background:#fff8e9;border-color:#f0d79b}.live-orb.speaking{animation:pulse .95s ease-in-out infinite;background:#f0efff;border-color:#aaa4ff}.live-status{font-weight:900;font-size:18px;margin-bottom:6px}.live-sub{color:var(--muted);font-size:14px;line-height:1.35}.live-actions{display:flex;gap:9px;justify-content:center;margin-top:14px;flex-wrap:wrap}.live-actions .btn{min-height:50px;font-size:15px;padding:11px 16px}.ai-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:99px;background:#e9f7ee;color:#34734b;font-weight:900;font-size:12px;margin-top:8px}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}@media(prefers-reduced-motion:reduce){.live-orb.listening,.live-orb.thinking,.live-orb.speaking{animation:none}}
+
   </style>
+  <script src="https://js.puter.com/v2/"></script>
 </head>
 <body>
   <main id="app" class="app-shell" aria-live="polite"></main>
@@ -2792,7 +2795,8 @@ window.SAUDI_WORDS = [
   const state = {
     view:'home', progress:{}, settings:{dailyPoints:0,dailyDate:'',speakingSessions:0,goal:'Свободно общаться',selectedLanguage:'sa'},
     lesson:[], lessonIndex:0, reveal:false, quizIndex:0, quizResults:{}, quizMode:'meaning', quizOptions:[], selected:null,
-    reviewMode:false, assistantOpen:false, chat:[{user:false,text:'هلا والله! شلونك؟',hint:'Привет! Как ты?'}]
+    reviewMode:false, assistantOpen:false, chat:[{user:false,text:'هلا والله! شلونك؟',hint:'Привет! Как ты?'}],
+    aiHistory:[], liveActive:false, livePhase:'idle', liveError:'', liveStream:null, liveRecorder:null, liveAudioCtx:null, liveAnalyser:null, liveRAF:0, liveMaxTimer:0
   };
 
   function openDb(){
@@ -2882,7 +2886,101 @@ window.SAUDI_WORDS = [
     state.progress[id]=p;await Promise.all([dbPut('progress',p).catch(()=>{}),saveSettings()]);
   }
 
-  function speak(text,rate=.72){if(!('speechSynthesis'in window))return; speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=rate;speechSynthesis.speak(u);}
+  let arabicVoice=null;
+  function loadArabicVoice(){
+    if(!('speechSynthesis' in window)) return;
+    const voices=window.speechSynthesis.getVoices?.()||[];
+    arabicVoice=voices.find(v=>(v.lang||'').toLowerCase()==='ar-sa')
+      ||voices.find(v=>(v.lang||'').toLowerCase().startsWith('ar'))
+      ||null;
+  }
+  loadArabicVoice();
+  if('speechSynthesis' in window){
+    window.speechSynthesis.onvoiceschanged=loadArabicVoice;
+  }
+  function voiceMessage(message){
+    const el=document.getElementById('voiceStatus');
+    if(el){el.textContent=message;el.style.display=message?'block':'none';}
+  }
+  function liveSet(phase,message=''){
+    state.livePhase=phase;
+    state.liveError=message||'';
+    const orb=document.getElementById('liveOrb');
+    const status=document.getElementById('liveStatus');
+    if(orb){orb.className=`live-orb ${phase}`;orb.textContent=phase==='listening'?'🎧':phase==='thinking'?'💭':phase==='speaking'?'🗣️':'🤖';}
+    if(status) status.textContent=message||(phase==='listening'?'Я слушаю — говори свободно':phase==='thinking'?'Думаю над ответом…':phase==='speaking'?'Отвечаю…':'Готов к разговору');
+  }
+  function splitSpeechSegments(text){
+    const parts=[]; let buf='', arabic=null;
+    for(const ch of String(text||'')){
+      const isAr=/[\u0600-\u06FF]/.test(ch);
+      if(arabic===null){arabic=isAr;buf=ch;continue;}
+      if(isAr===arabic || /[\s\d.,!?…:;()«»\-]/.test(ch)){buf+=ch;continue;}
+      if(buf.trim()) parts.push({text:buf.trim(),lang:arabic?'ar-SA':'ru-RU'});
+      buf=ch; arabic=isAr;
+    }
+    if(buf.trim()) parts.push({text:buf.trim(),lang:arabic?'ar-SA':'ru-RU'});
+    return parts.length?parts:[{text:String(text||''),lang:'ru-RU'}];
+  }
+  function speakSegment(text,lang,rate=.74){
+    return new Promise(resolve=>{
+      if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){resolve();return;}
+      try{
+        const u=new SpeechSynthesisUtterance(text);
+        u.lang=lang;
+        const voices=window.speechSynthesis.getVoices?.()||[];
+        const v=voices.find(x=>(x.lang||'').toLowerCase()===lang.toLowerCase())||voices.find(x=>(x.lang||'').toLowerCase().startsWith(lang.slice(0,2).toLowerCase()));
+        if(v)u.voice=v;
+        u.rate=lang==='ar-SA'?Math.max(.5,rate-.08):Math.max(.62,rate);
+        u.pitch=1;u.volume=1;
+        u.onend=()=>resolve();u.onerror=()=>resolve();
+        window.speechSynthesis.speak(u);
+      }catch(e){resolve();}
+    });
+  }
+  async function speakNatural(text,rate=.74){
+    if(!text)return;
+    try{window.speechSynthesis?.cancel();}catch(e){}
+    liveSet('speaking');
+    for(const part of splitSpeechSegments(text)){
+      await speakSegment(part.text,part.lang,rate);
+    }
+  }
+  function speak(text,rate=.72){
+    return speakNatural(text,rate).finally(()=>{if(!state.liveActive)liveSet('idle','');});
+  }
+  function startVoiceInput(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    const inp=document.getElementById('chatInput');
+    if(!inp) return;
+    if(!SR){
+      voiceMessage('На этом iPhone распознавание речи в браузере недоступно. Можно нажать микрофон на клавиатуре iPhone и продиктовать ответ.');
+      inp.focus();
+      return;
+    }
+    try{
+      const rec=new SR();
+      rec.lang='ar-SA';
+      rec.interimResults=false;
+      rec.continuous=false;
+      rec.maxAlternatives=1;
+      rec.onstart=()=>voiceMessage('🎤 Говори…');
+      rec.onresult=(event)=>{
+        const said=event.results?.[0]?.[0]?.transcript||'';
+        if(said){inp.value=said;voiceMessage(`Ты сказал: ${said}`);sendChat();}
+      };
+      rec.onerror=(event)=>{
+        if(event.error==='not-allowed'||event.error==='service-not-allowed') voiceMessage('Разреши доступ к микрофону для этого сайта в настройках Safari.');
+        else if(event.error==='no-speech') voiceMessage('Я не расслышал. Нажми 🎤 и попробуй ещё раз.');
+        else voiceMessage('Голосовой ввод сейчас недоступен. Можно использовать микрофон на клавиатуре iPhone.');
+      };
+      rec.onend=()=>{};
+      rec.start();
+    }catch(err){
+      voiceMessage('Не удалось включить микрофон. Можно использовать диктовку клавиатуры iPhone.');
+      inp.focus();
+    }
+  }
   function e(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
   function nav(active){return `<nav class="bottomnav"><button class="navbtn ${active==='home'?'active':''}" data-nav="home"><span>📚</span>Учиться</button><button class="navbtn ${active==='teacher'?'active':''}" data-nav="teacher"><span>🗣️</span>Говорить</button><button class="navbtn ${active==='progress'?'active':''}" data-nav="progress"><span>📈</span>Прогресс</button></nav>`;}
 
@@ -2982,8 +3080,168 @@ window.SAUDI_WORDS = [
     }
     const st=stageStats();const cumulative=masteredUpTo(availableMax);app.innerHTML=`<section class="screen"><header class="topbar"><div><h1>Твой путь</h1><p>Считаем реальные знания, а не просмотры</p></div></header><article class="card hero"><div class="hero-row"><div class="flag">🇸🇦</div><div><h2>Саудовский арабский</h2><p>${cumulative} из ${availableMax} доступных слов и фраз освоено</p></div></div><div class="progress"><span style="width:${Math.round(cumulative/availableMax*100)}%"></span></div><div class="progress-line"><span>Текущий этап: ${st.i+1} · ${st.name}</span><span>Слабых: ${weak()}</span></div></article><h2 class="section-title">Этапы</h2>${STAGES.map((s,i)=>{const content=s[1]<availableMax;const end=Math.min(s[2],availableMax);const total=Math.max(0,end-s[1]);const done=content?masteredRange(s[1],end):0;const unlocked=stageUnlocked(i)&&content;const completed=content&&s[2]<=availableMax&&done>=total;const badge=completed?'✓':unlocked?String(i+1):'🔒';const detail=content?`${done}/${total} в этапе · цель до ${s[2]} слов и выражений`:`Контент этого этапа будет добавлен следующим`;return `<article class="card stage ${unlocked?'':'locked'}"><div class="stagebadge">${badge}</div><div><h3>Этап ${i+1} · ${s[0]}</h3><p>${detail}<br>${s[3]}</p></div></article>`}).join('')}<article class="fact"><b>Как засчитывается слово:</b> просмотр карточки = 0. Нужно минимум несколько успешных активных проверок. Ошибка возвращает слово в ближайшие повторения.</article><article class="card" style="margin-top:12px"><b>Сейчас в курсе: ${availableMax} слов и фраз</b><p style="color:var(--muted);line-height:1.4">Этап 1 содержит 100, Этап 2 добавляет ещё 200. После их закрепления курс продолжится этапами 3–6 до 5000+ слов, выражений и разговорных конструкций.</p></article><article class="card" style="margin-top:12px"><b>Сохранение сейчас</b><p style="color:var(--muted);line-height:1.4">Прогресс хранится на этом устройстве в IndexedDB и работает офлайн. Для переноса между iPhone, Android и компьютером следующим серверным этапом подключим аккаунт и облачную синхронизацию.</p></article></section>${nav('progress')}`;bindCommon();}
 
+  function weakWordsForAI(limit=10){
+    return words.filter(w=>pFor(w.id).level===1).sort((a,b)=>(pFor(b.id).errors||0)-(pFor(a.id).errors||0)).slice(0,limit);
+  }
+  function masteredWordsForAI(limit=18){
+    return words.filter(w=>pFor(w.id).level>=2).sort((a,b)=>b.order-a.order).slice(0,limit);
+  }
+  function aiSystemPrompt(){
+    const st=stageStats();
+    const weakList=weakWordsForAI().map(w=>`${w.arabic} = ${w.russian}`).join('; ')||'пока нет';
+    const known=masteredWordsForAI().map(w=>`${w.arabic} = ${w.russian}`).join('; ')||'пока почти нет';
+    const m=mastered();
+    const russianShare=m<40?'примерно 75% русского и 25% простого саудовского арабского':m<120?'примерно половина русского и половина арабского':'в основном саудовский арабский, русский только для коротких подсказок';
+    return `Ты постоянный ИИ-помощник приложения «ЛегкоЯзык». Твоя роль сейчас: ${assistantRole()}. Пользователь учит разговорный саудовский арабский с уклоном в речь Эр-Рияда/Неджда. Его текущий этап: ${st.i+1} (${st.name}), освоено ${m} слов и фраз, осталось в текущем этапе ${st.remaining}.\n\nСтиль: общайся легко, тепло, непринуждённо и очень коротко. Это живой разговор, не лекция. Один ответ обычно 1–3 коротких предложения. Используй ${russianShare}. Не перегружай грамматикой. Исправляй максимум одну важную ошибку за раз и делай это мягко. Если человек устал или отвечает коротко — упрощай. Иногда можешь рассказать один короткий интересный факт, но не в каждом ответе.\n\nГлавная задача — разговорная практика. Постепенно используй уже знакомые слова. Слабые слова незаметно возвращай в естественный разговор, не говори пользователю, что это алгоритм повторения. Если пользователь не знает ответ — подскажи и продолжай. Не проводи экзамен без просьбы.\n\nУже уверенно знакомые слова/фразы: ${known}.\nСлабые слова/фразы, которые полезно естественно повторить: ${weakList}.\n\nОтвечай обычным текстом без JSON, без заголовков и без длинных списков. Когда вставляешь арабскую фразу, можешь сразу кратко объяснить её по-русски, если уровень начальный.`;
+  }
+  function aiText(response){
+    if(typeof response==='string')return response.trim();
+    if(response?.message?.content){
+      const c=response.message.content;
+      if(typeof c==='string')return c.trim();
+      if(Array.isArray(c))return c.map(x=>x?.text||x?.content||'').join(' ').trim();
+    }
+    if(response?.text)return String(response.text).trim();
+    return String(response||'').trim();
+  }
+  async function askAI(userText,{silent=false}={}){
+    if(!window.puter?.ai?.chat) throw new Error('AI service unavailable');
+    const history=state.aiHistory.slice(-10);
+    const messages=[{role:'system',content:aiSystemPrompt()},...history,{role:'user',content:userText}];
+    const response=await puter.ai.chat(messages,{model:'liquid/lfm-2.5-1.2b-instruct:free'});
+    const reply=aiText(response)||coachReply(userText)[0];
+    state.aiHistory.push({role:'user',content:userText},{role:'assistant',content:reply});
+    if(state.aiHistory.length>20)state.aiHistory=state.aiHistory.slice(-20);
+    return reply;
+  }
+  function stopLiveMedia(){
+    try{if(state.liveRAF)cancelAnimationFrame(state.liveRAF);}catch(e){}
+    state.liveRAF=0;
+    try{if(state.liveMaxTimer)clearTimeout(state.liveMaxTimer);}catch(e){}
+    state.liveMaxTimer=0;
+    try{if(state.liveRecorder&&state.liveRecorder.state!=='inactive')state.liveRecorder.stop();}catch(e){}
+    state.liveRecorder=null;
+    try{state.liveStream?.getTracks?.().forEach(t=>t.stop());}catch(e){}
+    state.liveStream=null;
+    try{state.liveAudioCtx?.close?.();}catch(e){}
+    state.liveAudioCtx=null;state.liveAnalyser=null;
+  }
+  function stopLiveConversation(){
+    state.liveActive=false;
+    stopLiveMedia();
+    try{window.speechSynthesis?.cancel();}catch(e){}
+    liveSet('idle','Разговор остановлен');
+    renderTeacher();
+  }
+  async function startLiveConversation(){
+    if(state.liveActive)return;
+    if(!navigator.mediaDevices?.getUserMedia){voiceMessage('На этом устройстве браузер не даёт доступ к микрофону.');return;}
+    state.liveActive=true;state.liveError='';
+    renderTeacher();
+    liveSet('thinking','Начинаем разговор…');
+    try{
+      const intro=await askAI('Начни со мной живой разговор прямо сейчас. Я только открыл приложение. Поздоровайся очень коротко и задай один лёгкий вопрос, подходящий моему уровню.');
+      state.chat.push({user:false,text:intro,hint:''});
+      renderTeacher();
+      await speakNatural(intro,.74);
+      if(state.liveActive)await beginAutoListening();
+    }catch(err){
+      console.warn(err);
+      const fallback='Привет! Давай совсем легко. شلونك؟ Как ты сегодня?';
+      state.chat.push({user:false,text:fallback,hint:''});
+      renderTeacher();await speakNatural(fallback,.74);
+      if(state.liveActive)await beginAutoListening();
+    }
+  }
+  async function beginAutoListening(){
+    if(!state.liveActive)return;
+    stopLiveMedia();
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+      if(!state.liveActive){stream.getTracks().forEach(t=>t.stop());return;}
+      state.liveStream=stream;
+      const AC=window.AudioContext||window.webkitAudioContext;
+      const ctx=new AC();state.liveAudioCtx=ctx;
+      const source=ctx.createMediaStreamSource(stream);
+      const analyser=ctx.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.2;source.connect(analyser);state.liveAnalyser=analyser;
+      const mime=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>window.MediaRecorder?.isTypeSupported?.(t));
+      const rec=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
+      state.liveRecorder=rec;
+      const chunks=[];let heard=false,silenceSince=0,startAt=performance.now();
+      rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+      rec.onstop=async()=>{
+        const blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+        stopLiveMedia();
+        if(!state.liveActive)return;
+        if(!heard||blob.size<600){setTimeout(()=>{if(state.liveActive)beginAutoListening()},350);return;}
+        await handleRecordedSpeech(blob);
+      };
+      rec.start(250);liveSet('listening');
+      const data=new Uint8Array(analyser.fftSize);
+      const monitor=()=>{
+        if(!state.liveActive||rec.state!=='recording')return;
+        analyser.getByteTimeDomainData(data);
+        let sum=0;for(const v of data){const x=(v-128)/128;sum+=x*x;}const rms=Math.sqrt(sum/data.length);
+        const now=performance.now();
+        if(rms>.028){heard=true;silenceSince=0;}
+        else if(heard){if(!silenceSince)silenceSince=now;if(now-silenceSince>1150&&now-startAt>900){try{rec.stop()}catch(e){};return;}}
+        state.liveRAF=requestAnimationFrame(monitor);
+      };
+      state.liveRAF=requestAnimationFrame(monitor);
+      state.liveMaxTimer=setTimeout(()=>{try{if(rec.state==='recording')rec.stop()}catch(e){}},14000);
+    }catch(err){
+      console.warn(err);state.liveActive=false;stopLiveMedia();
+      voiceMessage('Не получилось открыть микрофон. Разреши доступ к микрофону для этого сайта и попробуй снова.');
+      renderTeacher();
+    }
+  }
+  async function transcribeBlob(blob){
+    if(window.puter?.ai?.speech2txt){
+      const out=await puter.ai.speech2txt(blob);
+      if(typeof out==='string')return out.trim();
+      if(out?.text)return String(out.text).trim();
+      if(out?.transcription)return String(out.transcription).trim();
+      return String(out||'').trim();
+    }
+    throw new Error('Speech transcription unavailable');
+  }
+  async function handleRecordedSpeech(blob){
+    if(!state.liveActive)return;
+    liveSet('thinking','Понимаю, что ты сказал…');
+    try{
+      const said=await transcribeBlob(blob);
+      if(!said){liveSet('listening','Я не расслышал — скажи ещё раз');setTimeout(()=>{if(state.liveActive)beginAutoListening()},500);return;}
+      state.chat.push({user:true,text:said,hint:''});
+      renderTeacher();liveSet('thinking','Думаю над ответом…');
+      const reply=await askAI(said);
+      state.chat.push({user:false,text:reply,hint:''});
+      state.settings.speakingSessions++;
+      state.settings.dailyPoints+=20;
+      await saveSettings();
+      renderTeacher();
+      await speakNatural(reply,.74);
+      if(state.liveActive)await beginAutoListening();
+    }catch(err){
+      console.warn(err);
+      const fallback=coachReply(state.chat[state.chat.length-1]?.text||'')[0]||'Давай ещё раз, совсем спокойно.';
+      state.chat.push({user:false,text:fallback,hint:''});renderTeacher();
+      await speakNatural(fallback,.72);
+      if(state.liveActive)await beginAutoListening();
+    }
+  }
+
   function coachReply(input){const t=input.toLowerCase();if(t.includes('привет')||t.includes('هلا')||t.includes('السلام'))return ['هلا والله! شلونك؟','Привет! Как ты?'];if(t.includes('коф')||t.includes('قهوة'))return ['تمام. قل: أبغى قهوة، لو سمحت.','Хорошо. Скажи: «Я хочу кофе, пожалуйста».'];if(t.includes('вод')||t.includes('موية'))return ['ممتاز! قل: أبغى موية.','Отлично! Скажи: «Я хочу воды».'];if(t.includes('не понимаю')||t.includes('ما فهمت'))return ['عادي. قل: ما فهمت، تكلم شوي شوي.','Ничего страшного. Скажи: «Я не понял, говорите помедленнее».'];return ['زين! خلنا نجرب: أبغى هذا.','Хорошо! Попробуем: «Я хочу это».'];}
-  function renderTeacher(){app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Сначала веду по приложению, потом всё больше говорим</p></div></header><article class="fact"><b>Пока офлайн-ядро:</b> простые разговоры уже работают. Для настоящего свободного ИИ-диалога нужен защищённый сервер, чтобы ключ модели не лежал в браузере.</article><div class="chat" style="margin-top:14px">${state.chat.map(x=>`<div class="bubble ${x.user?'userb':'botb'}"><div class="arabic">${e(x.text)}</div>${x.hint?`<small>${e(x.hint)}</small>`:''}${!x.user?`<div><button class="link-btn" data-say="${e(x.text)}">🔊 Слушать</button></div>`:''}</div>`).join('')}</div><div class="chips"><button class="chip" data-chip="تمام">تمام</button><button class="chip" data-chip="أبغى قهوة">أبغى قهوة</button><button class="chip" data-chip="ما فهمت">ما فهمت</button><button class="chip" data-chip="أبغى موية">أبغى موية</button></div><div class="inputrow"><input id="chatInput" placeholder="Напиши ответ…" autocomplete="off"><button class="roundbtn" data-action="send">➤</button></div></section>${nav('teacher')}`;bindCommon();}
+  function renderTeacher(){
+    const liveLabel=state.liveActive?'Остановить живой разговор':'Начать живой разговор';
+    const liveAction=state.liveActive?'liveStop':'liveStart';
+    const phase=state.liveActive?state.livePhase:'idle';
+    const status=state.liveActive?(phase==='listening'?'Я слушаю — говори свободно':phase==='thinking'?'Думаю над ответом…':phase==='speaking'?'Отвечаю…':'Разговор активен'):'Один раз нажми — дальше говорим без постоянного нажатия микрофона';
+    app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Навигатор постепенно становится преподавателем и собеседником</p><span class="ai-badge">✨ Живой ИИ подключён</span></div></header>
+    <div class="live-panel"><div id="liveOrb" class="live-orb ${phase}">${phase==='listening'?'🎧':phase==='thinking'?'💭':phase==='speaking'?'🗣️':'🤖'}</div><div id="liveStatus" class="live-status">${e(status)}</div><div class="live-sub">Во время активного разговора помощник сам чередует: говорит → слушает → думает → отвечает. Для первого запуска iPhone попросит доступ к микрофону.</div><div class="live-actions"><button class="btn ${state.liveActive?'secondary':'primary'}" data-action="${liveAction}">${state.liveActive?'■':'▶'} ${liveLabel}</button></div></div>
+    <div id="voiceStatus" class="fact" style="${state.liveError?'':'display:none;'}margin-top:10px">${e(state.liveError)}</div>
+    <div class="chat" style="margin-top:14px">${state.chat.slice(-12).map(x=>`<div class="bubble ${x.user?'userb':'botb'}"><div class="arabic">${e(x.text)}</div>${x.hint?`<small>${e(x.hint)}</small>`:''}${!x.user?`<div><button class="link-btn" data-say="${e(x.text)}">🔊 Слушать ещё раз</button></div>`:''}</div>`).join('')}</div>
+    <div class="inputrow"><input id="chatInput" placeholder="Можно также написать ответ…" autocomplete="off"><button class="roundbtn" data-action="send" aria-label="Отправить">➤</button></div></section>${nav('teacher')}`;bindCommon();
+  }
 
   function showModal(type){
     let body='';
@@ -2999,7 +3257,7 @@ window.SAUDI_WORDS = [
   }
 
   function bindCommon(root=document){
-    root.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.view=b.dataset.nav;render()});
+    root.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{if(state.liveActive&&b.dataset.nav!=='teacher')stopLiveConversation();state.view=b.dataset.nav;render()});
     root.querySelectorAll('[data-action]').forEach(b=>b.onclick=async()=>{
       const a=b.dataset.action;
       if(a==='start5')startLesson(smartLesson(5));
@@ -3022,6 +3280,9 @@ window.SAUDI_WORDS = [
       }
       else if(a==='home'){state.view='home';render();}
       else if(a==='teacher'){document.getElementById('modal')?.remove();state.view='teacher';render();}
+      else if(a==='liveStart'){startLiveConversation();}
+      else if(a==='liveStop'){stopLiveConversation();}
+      else if(a==='voice'){startVoiceInput();}
       else if(a==='send'){sendChat();}
     });
     root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=async()=>{
@@ -3036,7 +3297,18 @@ window.SAUDI_WORDS = [
     root.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{const inp=document.getElementById('chatInput');if(inp){inp.value=b.dataset.chip;inp.focus();}});
     const inp=root.querySelector('#chatInput');if(inp)inp.onkeydown=e=>{if(e.key==='Enter')sendChat();};
   }
-  async function sendChat(){const inp=document.getElementById('chatInput');if(!inp)return;const text=inp.value.trim();if(!text)return;state.chat.push({user:true,text,hint:''});inp.value='';const [reply,hint]=coachReply(text);state.chat.push({user:false,text:reply,hint});state.settings.speakingSessions++;state.settings.dailyPoints+=20;await saveSettings();render();setTimeout(()=>speak(reply,.68),100);}
+  async function sendChat(){
+    const inp=document.getElementById('chatInput');if(!inp)return;
+    const userText=inp.value.trim();if(!userText)return;
+    state.chat.push({user:true,text:userText,hint:''});inp.value='';renderTeacher();liveSet('thinking','Думаю над ответом…');
+    let reply='';
+    try{reply=await askAI(userText);}catch(err){console.warn(err);reply=coachReply(userText)[0];}
+    state.chat.push({user:false,text:reply,hint:''});state.settings.speakingSessions++;state.settings.dailyPoints+=20;await saveSettings();renderTeacher();await speakNatural(reply,.72);
+    if(state.liveActive)await beginAutoListening();
+  }
+
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.liveActive){stopLiveMedia();state.livePhase='idle';}});
+  window.addEventListener('pagehide',()=>{stopLiveMedia();});
 
   loadState();
 })();
