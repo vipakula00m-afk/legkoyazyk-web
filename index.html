@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- ЛегкоЯзык build: 2026-08-23 LOCAL-AI + LAK v3 -->
 <html lang="ru">
 <head>
   <meta charset="utf-8">
@@ -8,6 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ЛегкоЯзык">
   <title>ЛегкоЯзык</title>
+  <!-- Версия: AI guest + Lak, 2026-08-23 -->
   <style>
 :root{
   --bg:#f8f8fc;--card:#fff;--ink:#20202a;--muted:#747483;--line:#e7e7ef;
@@ -36,7 +38,7 @@ button{cursor:pointer}
 .section-title{font-size:19px;font-weight:900;margin:22px 0 10px}
 .list-card{display:flex;gap:12px;align-items:center;margin-bottom:10px}.iconbox{width:50px;height:50px;border-radius:16px;background:#f1f0ff;display:grid;place-items:center;font-size:25px;flex:0 0 auto}.list-card h3{font-size:16px;margin:0 0 3px}.list-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.3}
 .bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(720px,100%);display:grid;grid-template-columns:repeat(3,1fr);background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 8px max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:10}.navbtn{border:0;background:transparent;border-radius:14px;padding:9px 4px;color:#727281;font-weight:800}.navbtn.active{background:#efedff;color:#4b44c6}.navbtn span{display:block;font-size:21px;margin-bottom:2px}
-.lesson-wrap{min-height:calc(100vh - 36px);display:flex;flex-direction:column}.lesson-card{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:420px}.emoji{font-size:92px;line-height:1}.arabic{font-size:38px;font-weight:900;margin:20px 0 8px;direction:rtl}.pron{font-size:18px;color:#5d5d70;font-weight:700}.translation{font-size:22px;font-weight:900;margin-top:14px}.hint{color:var(--muted);text-align:center;font-size:14px;margin:12px 0}
+.lesson-wrap{min-height:calc(100vh - 36px);display:flex;flex-direction:column}.lesson-card{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:420px}.emoji{font-size:92px;line-height:1}.arabic{font-size:38px;font-weight:900;margin:20px 0 8px}.pron{font-size:18px;color:#5d5d70;font-weight:700}.translation{font-size:22px;font-weight:900;margin-top:14px}.hint{color:var(--muted);text-align:center;font-size:14px;margin:12px 0}
 .quiz-title{text-align:center;font-size:22px;font-weight:900;margin:8px 0 15px}.quiz-prompt{text-align:center}.quiz-prompt .arabic{font-size:32px}.quiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.picture-option{min-height:138px;background:#fff;border:2px solid var(--line);border-radius:22px;font-size:62px}.text-option{width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px;margin-bottom:10px;font-weight:800}.correct{background:var(--good)!important;border-color:var(--goodline)!important}.wrong{background:var(--bad)!important;border-color:var(--badline)!important}.feedback{text-align:center;font-weight:850;margin:16px 0}
 .stage{display:flex;gap:12px;margin-bottom:10px}.stagebadge{width:46px;height:46px;border-radius:15px;background:#efedff;display:grid;place-items:center;font-weight:900;flex:0 0 auto}.locked{opacity:.55}.stage h3{margin:0 0 4px;font-size:16px}.stage p{margin:0;color:var(--muted);font-size:14px;line-height:1.3}
 .modal-back{position:fixed;inset:0;background:rgba(22,22,30,.42);display:grid;place-items:end center;z-index:30;padding:16px}.modal{width:min(680px,100%);background:#fff;border-radius:28px 28px 20px 20px;padding:20px;max-height:86vh;overflow:auto}.modal h2{margin:0 0 10px}.modal p{line-height:1.45;color:#5e5e6b}.close{float:right;border:0;background:#f0f0f5;border-radius:50%;width:38px;height:38px;font-size:20px}.fact{background:#fff8e9;border:1px solid #f1dfb3;border-radius:18px;padding:14px;color:#695f48}
@@ -49,7 +51,6 @@ button{cursor:pointer}
 .live-panel{margin-top:14px;padding:18px;border-radius:24px;background:linear-gradient(135deg,#f0efff,#fff);border:1px solid #dedaff;text-align:center}.live-orb{width:92px;height:92px;border-radius:50%;margin:4px auto 12px;display:grid;place-items:center;font-size:42px;background:#fff;border:2px solid #d8d4ff;box-shadow:0 8px 28px rgba(70,60,180,.10)}.live-orb.listening{animation:pulse 1.25s ease-in-out infinite;background:#edf8f2;border-color:#9ed7b0}.live-orb.thinking{animation:pulse 1.6s ease-in-out infinite;background:#fff8e9;border-color:#f0d79b}.live-orb.speaking{animation:pulse .95s ease-in-out infinite;background:#f0efff;border-color:#aaa4ff}.live-status{font-weight:900;font-size:18px;margin-bottom:6px}.live-sub{color:var(--muted);font-size:14px;line-height:1.35}.live-actions{display:flex;gap:9px;justify-content:center;margin-top:14px;flex-wrap:wrap}.live-actions .btn{min-height:50px;font-size:15px;padding:11px 16px}.ai-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:99px;background:#e9f7ee;color:#34734b;font-weight:900;font-size:12px;margin-top:8px}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}@media(prefers-reduced-motion:reduce){.live-orb.listening,.live-orb.thinking,.live-orb.speaking{animation:none}}
 
   </style>
-  <script src="https://js.puter.com/v2/"></script>
 </head>
 <body>
   <main id="app" class="app-shell" aria-live="polite"></main>
@@ -2757,12 +2758,25 @@ window.SAUDI_WORDS = [
   }
 ];
 
+window.LAK_WORDS = [
+  {"id":"lak001","order":1,"picture":"👋","arabic":"Бивзрув!","pronunciation":"","russian":"Здравствуйте","category":"Приветствие"},
+  {"id":"lak002","order":2,"picture":"🙂","arabic":"Ци иш бур?","pronunciation":"","russian":"Как идут дела?","category":"Приветствие"},
+  {"id":"lak003","order":3,"picture":"👍","arabic":"Барчаллагь, ххуйну бур","pronunciation":"","russian":"Спасибо, всё хорошо","category":"Приветствие"},
+  {"id":"lak004","order":4,"picture":"📰","arabic":"ЦIусса ци бур?","pronunciation":"","russian":"Что нового?","category":"Разговор"},
+  {"id":"lak005","order":5,"picture":"👌","arabic":"ЦIусса бакъар","pronunciation":"","russian":"Ничего нового","category":"Разговор"},
+  {"id":"lak006","order":6,"picture":"🙏","arabic":"Барчаллагь","pronunciation":"","russian":"Спасибо","category":"Вежливость"},
+  {"id":"lak007","order":7,"picture":"❓","arabic":"БучIирив цIуххин?","pronunciation":"","russian":"Можно задать вопрос?","category":"Вежливость"},
+  {"id":"lak008","order":8,"picture":"🌙","arabic":"Хьхьурду хъинну!","pronunciation":"","russian":"Доброй ночи","category":"Прощание"},
+  {"id":"lak009","order":9,"picture":"🤝","arabic":"Ссалам бусияра","pronunciation":"","russian":"Передайте привет","category":"Прощание"},
+  {"id":"lak010","order":10,"picture":"❤️","arabic":"ЦIуллушиву цукун дур?","pronunciation":"","russian":"Как ваше здоровье?","category":"Разговор"}
+];
+
   </script>
   <script>
 (() => {
   'use strict';
 
-  const words = window.SAUDI_WORDS || [];
+  let words = window.SAUDI_WORDS || [];
   const app = document.getElementById('app');
   const DB_NAME = 'legkoyazyk-db';
   const DB_VERSION = 1;
@@ -2774,16 +2788,23 @@ window.SAUDI_WORDS = [
     ['Уверенный разговор',1500,3000,'Говорить связно и понимать естественную речь'],
     ['Свободная практика',3000,5000,'Долго разговаривать и думать на языке']
   ];
-  const FACTS = [
+  const SAUDI_FACTS = [
     'В Саудовской Аравии «هلا والله» — тёплое живое приветствие.',
     '«يلا» очень часто означает «давай», «пошли» или «ну же».',
     'В разговорной саудовской речи «أبغى» часто значит «я хочу».',
     '«ما أدري» — простой разговорный способ сказать «не знаю».',
     'Короткие готовые фразы обычно полезнее для разговора, чем зубрёжка отдельных слов.'
   ];
+  const LAK_FACTS = [
+    'Лакский — один из литературных языков Дагестана.',
+    'Современная лакская письменность использует кириллицу.',
+    'Литературная норма лакского языка исторически связана с говором Кумуха.',
+    'Для лакского особенно полезно сверять произношение с носителями языка.'
+  ];
 
   const LANGUAGES = [
-    {id:'sa',flag:'🇸🇦',name:'Саудовский арабский',ready:true,detail:'300 слов и фраз уже доступны'},
+    {id:'sa',flag:'🇸🇦',name:'Саудовский арабский',ready:true,detail:'300 слов и фраз уже доступны',speechLang:'ar-SA',dir:'rtl',note:'Основная разговорная линия — понятная саудовская речь с уклоном в Эр‑Рияд/Неджд.',aiTarget:'разговорный саудовский арабский с уклоном в речь Эр-Рияда/Неджда'},
+    {id:'lak',flag:'🏔️',name:'Лакский',ready:true,detail:'стартовый курс · 10 живых фраз',speechLang:'ru-RU',dir:'ltr',note:'Стартовый лакский курс: современная письменность и полезные разговорные фразы.',aiTarget:'литературный лакский язык Дагестана; используй современную кириллическую орфографию и не выдумывай формы, в которых не уверен'},
     {id:'en',flag:'🇬🇧',name:'Английский',ready:false,detail:'курс готовится'},
     {id:'de',flag:'🇩🇪',name:'Немецкий',ready:false,detail:'курс готовится'},
     {id:'es',flag:'🇪🇸',name:'Испанский',ready:false,detail:'курс готовится'},
@@ -2791,13 +2812,19 @@ window.SAUDI_WORDS = [
     {id:'it',flag:'🇮🇹',name:'Итальянский',ready:false,detail:'курс готовится'},
     {id:'tr',flag:'🇹🇷',name:'Турецкий',ready:false,detail:'курс готовится'}
   ];
+  const LOCAL_AI_MODEL = 'onnx-community/Qwen2.5-0.5B-Instruct';
+  const LOCAL_AI_DTYPE = 'q4f16';
 
   const state = {
     view:'home', progress:{}, settings:{dailyPoints:0,dailyDate:'',speakingSessions:0,goal:'Свободно общаться',selectedLanguage:'sa'},
     lesson:[], lessonIndex:0, reveal:false, quizIndex:0, quizResults:{}, quizMode:'meaning', quizOptions:[], selected:null,
     reviewMode:false, assistantOpen:false, chat:[{user:false,text:'هلا والله! شلونك؟',hint:'Привет! Как ты?'}],
-    aiHistory:[], liveActive:false, livePhase:'idle', liveError:'', liveStream:null, liveRecorder:null, liveAudioCtx:null, liveAnalyser:null, liveRAF:0, liveMaxTimer:0
+    aiHistory:[], aiStatus:'idle', aiModel:'', aiProgress:'', liveActive:false, livePhase:'idle', liveError:'', liveStream:null, liveRecorder:null, liveRecognition:null, liveAudioCtx:null, liveAnalyser:null, liveRAF:0, liveMaxTimer:0
   };
+
+  let localAIGenerator = null;
+  let localAILoadPromise = null;
+  let lastAIProgressPaint = 0;
 
   function openDb(){
     return new Promise((resolve,reject)=>{
@@ -2817,16 +2844,27 @@ window.SAUDI_WORDS = [
       for(const row of await dbAll('progress')) state.progress[row.id]=row;
       const settings=(await dbAll('settings')).find(x=>x.key==='main'); if(settings) state.settings={...state.settings,...settings.value};
     }catch(e){ console.warn('IndexedDB unavailable',e); }
-    resetDaily(); render();
+    syncCourseData(); state.chat=initialChat(); resetDaily(); render();
   }
   function selectedLanguage(){return LANGUAGES.find(x=>x.id===state.settings.selectedLanguage)||LANGUAGES[0];}
-  function courseReady(){return selectedLanguage().id==='sa';}
+  function syncCourseData(){
+    const id=selectedLanguage().id;
+    words=id==='lak'?(window.LAK_WORDS||[]):id==='sa'?(window.SAUDI_WORDS||[]):[];
+    availableMax=words.reduce((m,w)=>Math.max(m,w.order||0),0);
+  }
+  function initialChat(){
+    const first=words[0];
+    if(selectedLanguage().id==='lak') return [{user:false,text:first?.arabic||'Лакский курс готов',hint:first?.russian||''}];
+    return [{user:false,text:'هلا والله! شلونك؟',hint:'Привет! Как ты?'}];
+  }
+  function courseReady(){return !!selectedLanguage().ready && words.length>0;}
+  function targetDir(){return selectedLanguage().dir||'ltr';}
   function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
   function resetDaily(){if(state.settings.dailyDate!==today()){state.settings.dailyDate=today();state.settings.dailyPoints=0;saveSettings();}}
   function saveSettings(){return dbPut('settings',{key:'main',value:state.settings}).catch(()=>{});}
   function pFor(id){return state.progress[id]||{id,level:0,seen:0,successes:0,errors:0,streak:0,nextReview:0};}
   function due(p){return !p.nextReview || p.nextReview<=Date.now();}
-  const availableMax = words.reduce((m,w)=>Math.max(m,w.order||0),0);
+  let availableMax = words.reduce((m,w)=>Math.max(m,w.order||0),0);
   function masteredRange(from,to){return words.filter(w=>w.order>from&&w.order<=to&&pFor(w.id).level>=2).length;}
   function masteredUpTo(to){return words.filter(w=>w.order<=to&&pFor(w.id).level>=2).length;}
   function mastered(){return words.filter(w=>pFor(w.id).level>=2).length;}
@@ -2857,7 +2895,7 @@ window.SAUDI_WORDS = [
     if(st.remaining<=10)return `До конца этапа ${st.i+1} осталось ${st.remaining}. Скоро короткая разговорная проверка!`;
     return `Этап ${st.i+1}: осталось ${st.remaining}. Сегодня смешаем немного нового, повторение и речь.`;
   }
-  function cultureFact(){const d=new Date();return FACTS[(d.getDate()+d.getMonth())%FACTS.length];}
+  function cultureFact(){const d=new Date();const facts=selectedLanguage().id==='lak'?LAK_FACTS:SAUDI_FACTS;return facts[(d.getDate()+d.getMonth())%facts.length];}
 
   function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
   function activePool(){
@@ -2960,7 +2998,7 @@ window.SAUDI_WORDS = [
     }
     try{
       const rec=new SR();
-      rec.lang='ar-SA';
+      rec.lang=selectedLanguage().speechLang||'ru-RU';
       rec.interimResults=false;
       rec.continuous=false;
       rec.maxAlternatives=1;
@@ -2996,8 +3034,8 @@ window.SAUDI_WORDS = [
     const lang=selectedLanguage();
     if(!courseReady()){
       app.innerHTML=`<section class="screen">
-        <header class="topbar"><div class="logo">Aa</div><div><h1>ЛегкоЯзык</h1><p>Коротко, легко — и к живой речи</p></div><div class="spacer"></div><div class="pill">⭐ ${state.settings.dailyPoints}</div></header>
-        <article class="card hero language-hero" data-action="languages"><div class="hero-row"><div class="flag">${lang.flag}</div><div class="grow"><h2>${e(lang.name)}</h2><p>Нажми, чтобы сменить язык</p></div><div class="switch-lang">Сменить ›</div></div><div class="coming">🚧 Этот курс сейчас готовится</div><p class="hint" style="margin:10px 0 0">Мы сохраним отдельный прогресс для каждого языка. Саудовский арабский уже доступен для занятий.</p></article>
+        <header class="topbar"><div class="logo">Aa</div><div><h1>ЛегкоЯзык</h1><p>Коротко, легко — и к живой речи</p></div><div class="spacer"></div><div class="pill">⭐ ${state.settings.dailyPoints}</div><div class="pill" style="background:#eef8f3;font-size:11px">v3</div></header>
+        <article class="card hero language-hero" data-action="languages"><div class="hero-row"><div class="flag">${lang.flag}</div><div class="grow"><h2>${e(lang.name)}</h2><p>Нажми, чтобы сменить язык</p></div><div class="switch-lang">Сменить ›</div></div><div class="coming">🚧 Этот курс сейчас готовится</div><p class="hint" style="margin:10px 0 0">Мы сохраним отдельный прогресс для каждого языка. Саудовский арабский и лакский уже доступны для занятий.</p></article>
         <article class="card assistant"><div class="bot">🤖</div><div><h3>Твой помощник · навигатор</h3><p>Выбери доступный язык — и я сразу поведу тебя по короткому уроку.</p><button class="link-btn" data-action="languages">Выбрать язык →</button></div></article>
         <div class="actions"><button class="btn primary" data-action="languages">🌍 Выбрать язык</button></div>
         <h2 class="section-title">Как будет работать каждый курс</h2>
@@ -3013,8 +3051,8 @@ window.SAUDI_WORDS = [
     const headline=st.contentReady?`Этап ${st.i+1} · ${st.name} · ${cumulativeDone}/${cumulativeTarget} освоено`:`Следующий этап · ${st.name}`;
     const progressText=st.contentReady?`Осталось ${st.remaining} слов и фраз в этапе`:`Пока закрепляем уже изученные ${availableMax} слов и фраз`;
     app.innerHTML=`<section class="screen">
-      <header class="topbar"><div class="logo">Aa</div><div><h1>ЛегкоЯзык</h1><p>Коротко, легко — и к живой речи</p></div><div class="spacer"></div><div class="pill">⭐ ${state.settings.dailyPoints}</div></header>
-      <article class="card hero language-hero" data-action="languages"><div class="hero-row"><div class="flag">${lang.flag}</div><div class="grow"><h2>${e(lang.name)}</h2><p>${headline}</p></div><div class="switch-lang">Сменить ›</div></div><div class="progress"><span style="width:${st.contentReady?st.pct:100}%"></span></div><div class="progress-line"><span>${progressText}</span><span>${st.contentReady?st.pct+'%':'✓'}</span></div><p class="hint" style="margin:10px 0 0">Основная разговорная линия — понятная саудовская речь с уклоном в Эр‑Рияд/Неджд.</p></article>
+      <header class="topbar"><div class="logo">Aa</div><div><h1>ЛегкоЯзык</h1><p>Коротко, легко — и к живой речи</p></div><div class="spacer"></div><div class="pill">⭐ ${state.settings.dailyPoints}</div><div class="pill" style="background:#eef8f3;font-size:11px">v3</div></header>
+      <article class="card hero language-hero" data-action="languages"><div class="hero-row"><div class="flag">${lang.flag}</div><div class="grow"><h2>${e(lang.name)}</h2><p>${headline}</p></div><div class="switch-lang">Сменить ›</div></div><div class="progress"><span style="width:${st.contentReady?st.pct:100}%"></span></div><div class="progress-line"><span>${progressText}</span><span>${st.contentReady?st.pct+'%':'✓'}</span></div><p class="hint" style="margin:10px 0 0">${e(lang.note||'Разговорный курс с короткими активными проверками.')}</p></article>
       <article class="card assistant"><div class="bot">🤖</div><div><h3>Твой помощник · ${assistantRole()}</h3><p>${e(assistantMessage())}</p><button class="link-btn" data-action="assistant">Поговорить со мной →</button></div></article>
       <div class="stats"><div class="stat"><div>🌱</div><div class="num">${weak()}</div><small>нужно освежить</small></div><div class="stat"><div>🗣️</div><div class="num">${state.settings.speakingSessions}</div><small>разговоров</small></div></div>
       <div class="actions"><button class="btn primary" data-action="start5">▶ Продолжить · 5 минут</button><button class="btn soft" data-action="start3">⚡ Быстро · 3 минуты</button><button class="btn secondary" data-action="review">↻ Повторить слабые слова</button></div>
@@ -3033,7 +3071,7 @@ window.SAUDI_WORDS = [
     const w=state.lesson[state.lessonIndex]; if(!w){state.view='home';return render();}
     const pct=((state.lessonIndex+1)/state.lesson.length)*100;
     app.innerHTML=`<section class="screen lesson-wrap"><header class="topbar"><button class="btn secondary" style="min-height:44px;padding:8px 12px" data-action="exit">←</button><div><h1>${e(w.category)}</h1><p>${state.lessonIndex+1}/${state.lesson.length}</p></div></header><div class="progress"><span style="width:${pct}%"></span></div>
-      <article class="card lesson-card"><div class="emoji">${e(w.picture)}</div><div class="arabic">${e(w.arabic)}</div><div class="pron">${e(w.pronunciation)}</div>${state.reveal?`<div class="translation">${e(w.russian)}</div>`:`<button class="btn secondary" data-action="reveal">👁 Показать перевод</button>`}<div style="height:12px"></div><button class="btn soft" data-action="speak">🔊 Слушать</button></article>
+      <article class="card lesson-card"><div class="emoji">${e(w.picture)}</div><div class="arabic" dir="${targetDir()}">${e(w.arabic)}</div>${w.pronunciation?`<div class="pron">${e(w.pronunciation)}</div>`:``}${state.reveal?`<div class="translation">${e(w.russian)}</div>`:`<button class="btn secondary" data-action="reveal">👁 Показать перевод</button>`}<div style="height:12px"></div><button class="btn soft" data-action="speak">🔊 Слушать</button></article>
       <p class="hint">Просмотр не считается изучением. Попробуй вспомнить сам — проверка будет после карточек.</p><button class="btn primary" data-action="nextcard">${state.lessonIndex===state.lesson.length-1?'Перейти к тестам':'Дальше'}</button></section>`;
     bindCommon();
   }
@@ -3048,14 +3086,14 @@ window.SAUDI_WORDS = [
     const correct=state.lesson[state.quizIndex];if(!correct){state.view='result';return render();}
     const mode=state.quizMode;let prompt='', options='';
     if(mode==='meaning'){
-      prompt=`<div class="emoji" style="font-size:58px">${e(correct.picture)}</div><div class="arabic">${e(correct.arabic)}</div>`;
+      prompt=`<div class="emoji" style="font-size:58px">${e(correct.picture)}</div><div class="arabic" dir="${targetDir()}">${e(correct.arabic)}</div>`;
       options=state.quizOptions.map(w=>textOption(w,w.russian,correct)).join('');
     }else if(mode==='wordPicture'){
-      prompt=`<div class="arabic">${e(correct.arabic)}</div><div class="pron">${e(correct.pronunciation)}</div><div class="translation">${e(correct.russian)}</div>`;
+      prompt=`<div class="arabic" dir="${targetDir()}">${e(correct.arabic)}</div>${correct.pronunciation?`<div class="pron">${e(correct.pronunciation)}</div>`:``}<div class="translation">${e(correct.russian)}</div>`;
       options=`<div class="quiz-grid">${state.quizOptions.map(w=>pictureOption(w,correct)).join('')}</div>`;
     }else if(mode==='pictureWord'){
       prompt=`<div class="emoji">${e(correct.picture)}</div><div class="translation">Как это сказать?</div>`;
-      options=state.quizOptions.map(w=>textOption(w,`<span dir="rtl">${e(w.arabic)}</span><br><small>${e(w.pronunciation)}</small>`,correct,true)).join('');
+      options=state.quizOptions.map(w=>textOption(w,`<span dir="${targetDir()}">${e(w.arabic)}</span>${w.pronunciation?`<br><small>${e(w.pronunciation)}</small>`:``}`,correct,true)).join('');
     }else{
       prompt=`<div class="emoji" style="font-size:54px">👂</div><button class="btn soft" data-action="audio">🔊 Послушать слово</button><p class="hint">Выбери картинку, которая подходит к услышанному.</p>`;
       options=`<div class="quiz-grid">${state.quizOptions.map(w=>pictureOption(w,correct)).join('')}</div>`;
@@ -3078,7 +3116,7 @@ window.SAUDI_WORDS = [
       app.innerHTML=`<section class="screen"><header class="topbar"><div><h1>Твой путь</h1><p>У каждого языка будет отдельный прогресс</p></div></header><article class="card hero"><div class="hero-row"><div class="flag">${lang.flag}</div><div><h2>${e(lang.name)}</h2><p>Курс готовится</p></div></div></article><article class="card" style="margin-top:14px"><b>Прогресс не смешивается</b><p style="color:var(--muted);line-height:1.4">Когда курс станет доступен, его слова, слабые места, этапы и разговорная практика будут храниться отдельно от других языков.</p><button class="btn primary" style="width:100%;margin-top:10px" data-action="languages">Сменить язык</button></article></section>${nav('progress')}`;
       bindCommon();return;
     }
-    const st=stageStats();const cumulative=masteredUpTo(availableMax);app.innerHTML=`<section class="screen"><header class="topbar"><div><h1>Твой путь</h1><p>Считаем реальные знания, а не просмотры</p></div></header><article class="card hero"><div class="hero-row"><div class="flag">🇸🇦</div><div><h2>Саудовский арабский</h2><p>${cumulative} из ${availableMax} доступных слов и фраз освоено</p></div></div><div class="progress"><span style="width:${Math.round(cumulative/availableMax*100)}%"></span></div><div class="progress-line"><span>Текущий этап: ${st.i+1} · ${st.name}</span><span>Слабых: ${weak()}</span></div></article><h2 class="section-title">Этапы</h2>${STAGES.map((s,i)=>{const content=s[1]<availableMax;const end=Math.min(s[2],availableMax);const total=Math.max(0,end-s[1]);const done=content?masteredRange(s[1],end):0;const unlocked=stageUnlocked(i)&&content;const completed=content&&s[2]<=availableMax&&done>=total;const badge=completed?'✓':unlocked?String(i+1):'🔒';const detail=content?`${done}/${total} в этапе · цель до ${s[2]} слов и выражений`:`Контент этого этапа будет добавлен следующим`;return `<article class="card stage ${unlocked?'':'locked'}"><div class="stagebadge">${badge}</div><div><h3>Этап ${i+1} · ${s[0]}</h3><p>${detail}<br>${s[3]}</p></div></article>`}).join('')}<article class="fact"><b>Как засчитывается слово:</b> просмотр карточки = 0. Нужно минимум несколько успешных активных проверок. Ошибка возвращает слово в ближайшие повторения.</article><article class="card" style="margin-top:12px"><b>Сейчас в курсе: ${availableMax} слов и фраз</b><p style="color:var(--muted);line-height:1.4">Этап 1 содержит 100, Этап 2 добавляет ещё 200. После их закрепления курс продолжится этапами 3–6 до 5000+ слов, выражений и разговорных конструкций.</p></article><article class="card" style="margin-top:12px"><b>Сохранение сейчас</b><p style="color:var(--muted);line-height:1.4">Прогресс хранится на этом устройстве в IndexedDB и работает офлайн. Для переноса между iPhone, Android и компьютером следующим серверным этапом подключим аккаунт и облачную синхронизацию.</p></article></section>${nav('progress')}`;bindCommon();}
+    const st=stageStats();const cumulative=masteredUpTo(availableMax);app.innerHTML=`<section class="screen"><header class="topbar"><div><h1>Твой путь</h1><p>Считаем реальные знания, а не просмотры</p></div></header><article class="card hero"><div class="hero-row"><div class="flag">${lang.flag}</div><div><h2>${e(lang.name)}</h2><p>${cumulative} из ${availableMax} доступных слов и фраз освоено</p></div></div><div class="progress"><span style="width:${Math.round(cumulative/availableMax*100)}%"></span></div><div class="progress-line"><span>Текущий этап: ${st.i+1} · ${st.name}</span><span>Слабых: ${weak()}</span></div></article><h2 class="section-title">Этапы</h2>${STAGES.map((s,i)=>{const content=s[1]<availableMax;const end=Math.min(s[2],availableMax);const total=Math.max(0,end-s[1]);const done=content?masteredRange(s[1],end):0;const unlocked=stageUnlocked(i)&&content;const completed=content&&s[2]<=availableMax&&done>=total;const badge=completed?'✓':unlocked?String(i+1):'🔒';const detail=content?`${done}/${total} в этапе · цель до ${s[2]} слов и выражений`:`Контент этого этапа будет добавлен следующим`;return `<article class="card stage ${unlocked?'':'locked'}"><div class="stagebadge">${badge}</div><div><h3>Этап ${i+1} · ${s[0]}</h3><p>${detail}<br>${s[3]}</p></div></article>`}).join('')}<article class="fact"><b>Как засчитывается слово:</b> просмотр карточки = 0. Нужно минимум несколько успешных активных проверок. Ошибка возвращает слово в ближайшие повторения.</article><article class="card" style="margin-top:12px"><b>Сейчас в курсе: ${availableMax} слов и фраз</b><p style="color:var(--muted);line-height:1.4">${lang.id==='lak'?'Это стартовый лакский набор. Новые проверенные слова и разговорные фразы можно постепенно добавлять, не смешивая прогресс с другими языками.':'Этап 1 содержит 100, Этап 2 добавляет ещё 200. После их закрепления курс продолжится этапами 3–6 до 5000+ слов, выражений и разговорных конструкций.'}</p></article><article class="card" style="margin-top:12px"><b>Сохранение сейчас</b><p style="color:var(--muted);line-height:1.4">Прогресс хранится на этом устройстве в IndexedDB и работает офлайн. Для переноса между iPhone, Android и компьютером следующим серверным этапом подключим аккаунт и облачную синхронизацию.</p></article></section>${nav('progress')}`;bindCommon();}
 
   function weakWordsForAI(limit=10){
     return words.filter(w=>pFor(w.id).level===1).sort((a,b)=>(pFor(b.id).errors||0)-(pFor(a.id).errors||0)).slice(0,limit);
@@ -3088,45 +3126,103 @@ window.SAUDI_WORDS = [
   }
   function aiSystemPrompt(){
     const st=stageStats();
+    const lang=selectedLanguage();
     const weakList=weakWordsForAI().map(w=>`${w.arabic} = ${w.russian}`).join('; ')||'пока нет';
     const known=masteredWordsForAI().map(w=>`${w.arabic} = ${w.russian}`).join('; ')||'пока почти нет';
     const m=mastered();
-    const russianShare=m<40?'примерно 75% русского и 25% простого саудовского арабского':m<120?'примерно половина русского и половина арабского':'в основном саудовский арабский, русский только для коротких подсказок';
-    return `Ты постоянный ИИ-помощник приложения «ЛегкоЯзык». Твоя роль сейчас: ${assistantRole()}. Пользователь учит разговорный саудовский арабский с уклоном в речь Эр-Рияда/Неджда. Его текущий этап: ${st.i+1} (${st.name}), освоено ${m} слов и фраз, осталось в текущем этапе ${st.remaining}.\n\nСтиль: общайся легко, тепло, непринуждённо и очень коротко. Это живой разговор, не лекция. Один ответ обычно 1–3 коротких предложения. Используй ${russianShare}. Не перегружай грамматикой. Исправляй максимум одну важную ошибку за раз и делай это мягко. Если человек устал или отвечает коротко — упрощай. Иногда можешь рассказать один короткий интересный факт, но не в каждом ответе.\n\nГлавная задача — разговорная практика. Постепенно используй уже знакомые слова. Слабые слова незаметно возвращай в естественный разговор, не говори пользователю, что это алгоритм повторения. Если пользователь не знает ответ — подскажи и продолжай. Не проводи экзамен без просьбы.\n\nУже уверенно знакомые слова/фразы: ${known}.\nСлабые слова/фразы, которые полезно естественно повторить: ${weakList}.\n\nОтвечай обычным текстом без JSON, без заголовков и без длинных списков. Когда вставляешь арабскую фразу, можешь сразу кратко объяснить её по-русски, если уровень начальный.`;
+    const targetName=lang.id==='lak'?'лакского':lang.id==='sa'?'саудовского арабского':lang.name;
+    const russianShare=m<40?`примерно 75% русского и 25% простого ${targetName}`:m<120?`примерно половина русского и половина ${targetName}`:`в основном ${targetName}, русский только для коротких подсказок`;
+    const courseLexicon=lang.id==='lak'?words.map(w=>`${w.arabic} = ${w.russian}`).join('; '):'';
+    const accuracyRule=lang.id==='lak'?`Для лакского особенно важна точность. Используй лакские слова и фразы ТОЛЬКО из проверенного словаря курса ниже. Не придумывай новые лакские формы. Если нужной формы нет, объясни по-русски и предложи ближайшую проверенную фразу. Проверенный словарь курса: ${courseLexicon}.`:'';
+    return `Ты постоянный ИИ-помощник приложения «ЛегкоЯзык». Твоя роль сейчас: ${assistantRole()}. Пользователь учит ${lang.aiTarget||lang.name}. Его текущий этап: ${st.i+1} (${st.name}), освоено ${m} слов и фраз, осталось в текущем этапе ${st.remaining}.\n\nСтиль: общайся легко, тепло и очень коротко. Один ответ обычно 1–3 коротких предложения. Используй ${russianShare}. Не перегружай грамматикой. Исправляй максимум одну важную ошибку за раз. ${accuracyRule}\n\nГлавная задача — разговорная практика. Постепенно используй уже знакомые слова. Слабые слова возвращай в естественный разговор. Если пользователь не знает ответ — подскажи и продолжай.\n\nУже знакомые слова/фразы: ${known}.\nСлабые слова/фразы: ${weakList}.\n\nОтвечай обычным текстом без JSON, без заголовков и без длинных списков.`;
   }
   function aiText(response){
     if(typeof response==='string')return response.trim();
-    if(response?.message?.content){
-      const c=response.message.content;
-      if(typeof c==='string')return c.trim();
-      if(Array.isArray(c))return c.map(x=>x?.text||x?.content||'').join(' ').trim();
+    const generated=response?.[0]?.generated_text ?? response?.generated_text ?? response;
+    if(Array.isArray(generated)){
+      const assistant=[...generated].reverse().find(x=>x?.role==='assistant');
+      return String(assistant?.content||'').trim();
     }
-    if(response?.text)return String(response.text).trim();
-    return String(response||'').trim();
+    if(generated?.content)return String(generated.content).trim();
+    return String(generated||'').trim();
   }
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+  function paintAIProgress(text){
+    state.aiProgress=text||'';
+    const now=Date.now();
+    if(now-lastAIProgressPaint<180)return;
+    lastAIProgressPaint=now;
+    const el=document.getElementById('aiProgress');
+    if(el)el.textContent=state.aiProgress;
+  }
+  function progressLabel(p){
+    if(!p)return 'Подготавливаю локальный ИИ…';
+    const pct=Number.isFinite(p.progress)?Math.max(0,Math.min(100,Math.round(p.progress))):null;
+    if(p.status==='progress'&&pct!==null)return `Загружаю ИИ на iPhone: ${pct}%`;
+    if(p.status==='download')return 'Скачиваю модель ИИ на iPhone…';
+    if(p.status==='initiate')return 'Подготавливаю файлы локального ИИ…';
+    if(p.status==='ready')return 'Локальный ИИ готов.';
+    return 'Подготавливаю локальный ИИ…';
+  }
+  async function connectAIFromUserAction(){
+    if(localAIGenerator){state.aiStatus='ready';state.aiModel=LOCAL_AI_MODEL;return true;}
+    if(localAILoadPromise){await localAILoadPromise;return !!localAIGenerator;}
+    if(!navigator.gpu)throw new Error('На этом браузере WebGPU недоступен. Обнови iPhone до Safari 26 или новее.');
+    state.aiStatus='loading';
+    paintAIProgress('Первый запуск: загружаю локальный ИИ (~500 МБ). Регистрация не нужна.');
+    if(state.view==='teacher')renderTeacher();
+    localAILoadPromise=(async()=>{
+      try{
+        const mod=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0');
+        const {pipeline,env}=mod;
+        env.allowLocalModels=false;
+        localAIGenerator=await pipeline('text-generation',LOCAL_AI_MODEL,{
+          device:'webgpu',
+          dtype:LOCAL_AI_DTYPE,
+          progress_callback:(p)=>paintAIProgress(progressLabel(p))
+        });
+        state.aiStatus='ready';state.aiModel=LOCAL_AI_MODEL;paintAIProgress('Локальный ИИ готов. Аккаунт и номер телефона не нужны.');
+        return true;
+      }catch(err){
+        console.error('Local AI load failed',err);
+        localAIGenerator=null;state.aiStatus='offline';
+        throw new Error('Не удалось загрузить локальный ИИ. Проверь интернет и свободное место, затем попробуй ещё раз.');
+      }finally{localAILoadPromise=null;}
+    })();
+    return await localAILoadPromise;
+  }
+  function aiTimeout(promise,ms=90000){return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('ИИ не ответил вовремя')),ms))]);}
   async function askAI(userText,{silent=false}={}){
-    if(!window.puter?.ai?.chat){
-      throw new Error('Puter AI не загрузился');
-    }
-    const history=state.aiHistory.slice(-10);
+    await connectAIFromUserAction();
+    if(!localAIGenerator)throw new Error('Локальный ИИ не загрузился');
+    const history=state.aiHistory.slice(-6);
     const messages=[{role:'system',content:aiSystemPrompt()},...history,{role:'user',content:userText}];
+    state.aiStatus='thinking';
     try{
-      const response=await puter.ai.chat(messages,{model:'liquid/lfm-2.5-2.6b:free'});
+      const response=await aiTimeout(localAIGenerator(messages,{
+        max_new_tokens:110,
+        do_sample:true,
+        temperature:.65,
+        top_p:.9,
+        repetition_penalty:1.08
+      }));
       const reply=aiText(response);
-      if(!reply) throw new Error('ИИ вернул пустой ответ');
+      if(!reply)throw new Error('ИИ вернул пустой ответ');
       state.aiHistory.push({role:'user',content:userText},{role:'assistant',content:reply});
-      if(state.aiHistory.length>20)state.aiHistory=state.aiHistory.slice(-20);
+      if(state.aiHistory.length>14)state.aiHistory=state.aiHistory.slice(-14);
+      state.aiStatus='online';state.aiModel=LOCAL_AI_MODEL;state.liveError='';
       return reply;
-    }catch(err){
-      console.error('AI error:',err);
-      throw err;
-    }
+    }catch(err){state.aiStatus='offline';throw err;}
   }
   function stopLiveMedia(){
     try{if(state.liveRAF)cancelAnimationFrame(state.liveRAF);}catch(e){}
     state.liveRAF=0;
     try{if(state.liveMaxTimer)clearTimeout(state.liveMaxTimer);}catch(e){}
     state.liveMaxTimer=0;
+    if(state.liveRecognition){
+      try{state.liveRecognition.onend=null;state.liveRecognition.onerror=null;state.liveRecognition.onresult=null;state.liveRecognition.stop();}catch(e){}
+      state.liveRecognition=null;
+    }
     try{if(state.liveRecorder&&state.liveRecorder.state!=='inactive')state.liveRecorder.stop();}catch(e){}
     state.liveRecorder=null;
     try{state.liveStream?.getTracks?.().forEach(t=>t.stop());}catch(e){}
@@ -3143,7 +3239,9 @@ window.SAUDI_WORDS = [
   }
   async function startLiveConversation(){
     if(state.liveActive)return;
-    if(!navigator.mediaDevices?.getUserMedia){voiceMessage('На этом устройстве браузер не даёт доступ к микрофону.');return;}
+    try{await connectAIFromUserAction();}catch(err){state.aiStatus='offline';state.liveError='Не удалось запустить локальный ИИ: '+(err?.message||'ошибка');renderTeacher();return;}
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){state.liveError='На этом устройстве автоматическое распознавание речи недоступно. Можно писать ответы внизу — локальный ИИ всё равно работает.';renderTeacher();return;}
     state.liveActive=true;state.liveError='';
     renderTeacher();
     liveSet('thinking','Начинаем разговор…');
@@ -3155,7 +3253,7 @@ window.SAUDI_WORDS = [
       if(state.liveActive)await beginAutoListening();
     }catch(err){
       console.warn(err);
-      state.liveError='ИИ сейчас не подключился к интернет-сервису. Я включил простой офлайн-режим, а живой ИИ попробуем снова при следующем запуске разговора.';
+      state.liveError='Локальный ИИ не смог ответить. Можно продолжить короткими встроенными подсказками и попробовать снова.';
       const fallback='Привет! Давай совсем легко. شلونك؟ Как ты сегодня?';
       state.chat.push({user:false,text:fallback,hint:''});
       renderTeacher();
@@ -3167,61 +3265,46 @@ window.SAUDI_WORDS = [
   async function beginAutoListening(){
     if(!state.liveActive)return;
     stopLiveMedia();
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){state.liveActive=false;state.liveError='Распознавание речи в Safari недоступно. Используй поле ввода внизу.';renderTeacher();return;}
     try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-      if(!state.liveActive){stream.getTracks().forEach(t=>t.stop());return;}
-      state.liveStream=stream;
-      const AC=window.AudioContext||window.webkitAudioContext;
-      const ctx=new AC();state.liveAudioCtx=ctx;
-      const source=ctx.createMediaStreamSource(stream);
-      const analyser=ctx.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.2;source.connect(analyser);state.liveAnalyser=analyser;
-      const mime=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>window.MediaRecorder?.isTypeSupported?.(t));
-      const rec=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
-      state.liveRecorder=rec;
-      const chunks=[];let heard=false,silenceSince=0,startAt=performance.now();
-      rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
-      rec.onstop=async()=>{
-        const blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
-        stopLiveMedia();
-        if(!state.liveActive)return;
-        if(!heard||blob.size<600){setTimeout(()=>{if(state.liveActive)beginAutoListening()},350);return;}
-        await handleRecordedSpeech(blob);
+      const rec=new SR();
+      state.liveRecognition=rec;
+      let handled=false;
+      rec.lang=selectedLanguage().speechLang||'ru-RU';
+      rec.interimResults=false;
+      rec.continuous=false;
+      rec.maxAlternatives=1;
+      rec.onstart=()=>liveSet('listening','Я слушаю — говори свободно');
+      rec.onresult=async(event)=>{
+        handled=true;state.liveRecognition=null;
+        const said=String(event.results?.[0]?.[0]?.transcript||'').trim();
+        if(!said){if(state.liveActive)setTimeout(()=>beginAutoListening(),450);return;}
+        await handleRecognizedSpeech(said);
       };
-      rec.start(250);liveSet('listening');
-      const data=new Uint8Array(analyser.fftSize);
-      const monitor=()=>{
-        if(!state.liveActive||rec.state!=='recording')return;
-        analyser.getByteTimeDomainData(data);
-        let sum=0;for(const v of data){const x=(v-128)/128;sum+=x*x;}const rms=Math.sqrt(sum/data.length);
-        const now=performance.now();
-        if(rms>.028){heard=true;silenceSince=0;}
-        else if(heard){if(!silenceSince)silenceSince=now;if(now-silenceSince>1150&&now-startAt>900){try{rec.stop()}catch(e){};return;}}
-        state.liveRAF=requestAnimationFrame(monitor);
+      rec.onerror=(event)=>{
+        console.warn('Speech recognition error',event?.error);
+        state.liveRecognition=null;
+        if(event?.error==='not-allowed'||event?.error==='service-not-allowed'){
+          state.liveActive=false;state.liveError='Разреши микрофон для этого сайта в Safari и запусти разговор снова.';renderTeacher();
+        }else if(state.liveActive&&event?.error!=='aborted'){
+          liveSet('listening','Не расслышал — попробуй ещё раз');setTimeout(()=>beginAutoListening(),650);
+        }
       };
-      state.liveRAF=requestAnimationFrame(monitor);
-      state.liveMaxTimer=setTimeout(()=>{try{if(rec.state==='recording')rec.stop()}catch(e){}},14000);
+      rec.onend=()=>{
+        state.liveRecognition=null;
+        if(state.liveActive&&!handled)setTimeout(()=>beginAutoListening(),500);
+      };
+      rec.start();
     }catch(err){
-      console.warn(err);state.liveActive=false;stopLiveMedia();
-      voiceMessage('Не получилось открыть микрофон. Разреши доступ к микрофону для этого сайта и попробуй снова.');
-      renderTeacher();
+      console.warn(err);state.liveActive=false;state.liveRecognition=null;
+      state.liveError='Не получилось включить распознавание речи. Можно писать ответы внизу.';renderTeacher();
     }
   }
-  async function transcribeBlob(blob){
-    if(window.puter?.ai?.speech2txt){
-      const out=await puter.ai.speech2txt(blob);
-      if(typeof out==='string')return out.trim();
-      if(out?.text)return String(out.text).trim();
-      if(out?.transcription)return String(out.transcription).trim();
-      return String(out||'').trim();
-    }
-    throw new Error('Speech transcription unavailable');
-  }
-  async function handleRecordedSpeech(blob){
+  async function handleRecognizedSpeech(said){
     if(!state.liveActive)return;
-    liveSet('thinking','Понимаю, что ты сказал…');
+    liveSet('thinking','Думаю над ответом…');
     try{
-      const said=await transcribeBlob(blob);
-      if(!said){liveSet('listening','Я не расслышал — скажи ещё раз');setTimeout(()=>{if(state.liveActive)beginAutoListening()},500);return;}
       state.chat.push({user:true,text:said,hint:''});
       renderTeacher();liveSet('thinking','Думаю над ответом…');
       const reply=await askAI(said);
@@ -3234,27 +3317,40 @@ window.SAUDI_WORDS = [
       if(state.liveActive)await beginAutoListening();
     }catch(err){
       console.warn(err);
-      state.liveError='Связь с ИИ временно не сработала. Продолжаю простым офлайн-ответом.';
-      const fallback=coachReply(state.chat[state.chat.length-1]?.text||'')[0]||'Давай ещё раз, совсем спокойно.';
+      state.liveError='Локальный ИИ временно не ответил. Продолжаю встроенной подсказкой.';
+      const fallback=coachReply(said)[0]||'Давай ещё раз, совсем спокойно.';
       state.chat.push({user:false,text:fallback,hint:''});
-      renderTeacher();
-      voiceMessage(state.liveError);
+      renderTeacher();voiceMessage(state.liveError);
       await speakNatural(fallback,.72);
       if(state.liveActive)await beginAutoListening();
     }
   }
 
-  function coachReply(input){const t=input.toLowerCase();if(t.includes('привет')||t.includes('هلا')||t.includes('السلام'))return ['هلا والله! شلونك؟','Привет! Как ты?'];if(t.includes('коф')||t.includes('قهوة'))return ['تمام. قل: أبغى قهوة، لو سمحت.','Хорошо. Скажи: «Я хочу кофе, пожалуйста».'];if(t.includes('вод')||t.includes('موية'))return ['ممتاز! قل: أبغى موية.','Отлично! Скажи: «Я хочу воды».'];if(t.includes('не понимаю')||t.includes('ما فهمت'))return ['عادي. قل: ما فهمت، تكلم شوي شوي.','Ничего страшного. Скажи: «Я не понял, говорите помедленнее».'];return ['زين! خلنا نجرب: أبغى هذا.','Хорошо! Попробуем: «Я хочу это».'];}
+  function coachReply(input){
+    const t=input.toLowerCase();
+    if(selectedLanguage().id==='lak'){
+      const by=id=>words.find(w=>w.id===id), pick=(id,hint)=>{const w=by(id);return [w?.arabic||hint,hint];};
+      if(t.includes('спас')||t.includes('барч'))return pick('lak006','Спасибо');
+      if(t.includes('дел')||t.includes('как'))return pick('lak002','Как идут дела?');
+      if(t.includes('здоров'))return pick('lak010','Как ваше здоровье?');
+      return pick('lak004','Что нового?');
+    }
+    if(t.includes('привет')||t.includes('هلا')||t.includes('السلام'))return ['هلا والله! شلونك؟','Привет! Как ты?'];
+    if(t.includes('коф')||t.includes('قهوة'))return ['تمام. قل: أبغى قهوة، لو سمحت.','Хорошо. Скажи: «Я хочу кофе, пожалуйста».'];
+    if(t.includes('вод')||t.includes('موية'))return ['ممتاز! قل: أبغى موية.','Отлично. Скажи, что хочешь воды.'];
+    if(t.includes('не понимаю')||t.includes('ما فهمت'))return ['عادي. قل: ما فهمت، تكلم شوي شوي.','Попроси говорить помедленнее.'];
+    return ['زين! خلنا نجرب: أبغى هذا.','Попробуем простую фразу.'];
+  }
   function renderTeacher(){
     const liveLabel=state.liveActive?'Остановить живой разговор':'Начать живой разговор';
     const liveAction=state.liveActive?'liveStop':'liveStart';
     const phase=state.liveActive?state.livePhase:'idle';
     const status=state.liveActive?(phase==='listening'?'Я слушаю — говори свободно':phase==='thinking'?'Думаю над ответом…':phase==='speaking'?'Отвечаю…':'Разговор активен'):'Один раз нажми — дальше говорим без постоянного нажатия микрофона';
-    app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Навигатор постепенно становится преподавателем и собеседником</p><span class="ai-badge">✨ Живой ИИ подключён</span></div></header>
-    <div class="live-panel"><div id="liveOrb" class="live-orb ${phase}">${phase==='listening'?'🎧':phase==='thinking'?'💭':phase==='speaking'?'🗣️':'🤖'}</div><div id="liveStatus" class="live-status">${e(status)}</div><div class="live-sub">Во время активного разговора помощник сам чередует: говорит → слушает → думает → отвечает. Для первого запуска iPhone попросит доступ к микрофону.</div><div class="live-actions"><button class="btn ${state.liveActive?'secondary':'primary'}" data-action="${liveAction}">${state.liveActive?'■':'▶'} ${liveLabel}</button></div></div>
+    app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Навигатор постепенно становится преподавателем и собеседником</p><span class="ai-badge">${state.aiStatus==='online'?'✨ Локальный ИИ работает':state.aiStatus==='thinking'?'💭 ИИ думает…':state.aiStatus==='loading'?'⬇️ Загружаю ИИ…':state.aiStatus==='ready'?'✅ ИИ загружен':state.aiStatus==='offline'?'⚠️ ИИ не запущен':'🤖 Локальный ИИ · без регистрации'}</span></div></header>
+    <div class="live-panel"><div id="liveOrb" class="live-orb ${phase}">${phase==='listening'?'🎧':phase==='thinking'?'💭':phase==='speaking'?'🗣️':'🤖'}</div><div id="liveStatus" class="live-status">${e(status)}</div><div class="live-sub">ИИ работает прямо на iPhone: без Puter, без аккаунта, без номера телефона и без API‑ключа. При первом запуске модель (~500 МБ) скачивается один раз; лучше использовать Wi‑Fi. После загрузки она хранится в кэше браузера.</div><div id="aiProgress" class="hint" style="margin:10px 0 0">${e(state.aiProgress||'')}</div><div class="live-actions"><button class="btn ${state.liveActive?'secondary':'primary'}" data-action="${liveAction}">${state.liveActive?'■':'▶'} ${liveLabel}</button>${state.aiStatus==='offline'?`<button class="btn soft" data-action="aiConnect">↻ Загрузить ИИ ещё раз</button>`:``}</div></div>
     <div id="voiceStatus" class="fact" style="${state.liveError?'':'display:none;'}margin-top:10px">${e(state.liveError)}</div>
-    <div class="chat" style="margin-top:14px">${state.chat.slice(-12).map(x=>`<div class="bubble ${x.user?'userb':'botb'}"><div class="arabic">${e(x.text)}</div>${x.hint?`<small>${e(x.hint)}</small>`:''}${!x.user?`<div><button class="link-btn" data-say="${e(x.text)}">🔊 Слушать ещё раз</button></div>`:''}</div>`).join('')}</div>
-    <div class="inputrow"><input id="chatInput" placeholder="Можно также написать ответ…" autocomplete="off"><button class="roundbtn" data-action="send" aria-label="Отправить">➤</button></div></section>${nav('teacher')}`;bindCommon();
+    <div class="chat" style="margin-top:14px">${state.chat.slice(-12).map(x=>`<div class="bubble ${x.user?'userb':'botb'}"><div class="arabic" dir="${targetDir()}">${e(x.text)}</div>${x.hint?`<small>${e(x.hint)}</small>`:''}${!x.user?`<div><button class="link-btn" data-say="${e(x.text)}">🔊 Слушать ещё раз</button></div>`:''}</div>`).join('')}</div>
+    <div class="inputrow"><input id="chatInput" placeholder="Можно также написать ответ…" autocomplete="off"><button class="roundbtn" data-action="voice" aria-label="Говорить">🎤</button><button class="roundbtn" data-action="send" aria-label="Отправить">➤</button></div></section>${nav('teacher')}`;bindCommon();
   }
 
   function showModal(type){
@@ -3296,11 +3392,14 @@ window.SAUDI_WORDS = [
       else if(a==='teacher'){document.getElementById('modal')?.remove();state.view='teacher';render();}
       else if(a==='liveStart'){startLiveConversation();}
       else if(a==='liveStop'){stopLiveConversation();}
+      else if(a==='aiConnect'){try{await connectAIFromUserAction();state.liveError='Локальный ИИ готов — регистрация и номер телефона не нужны.';}catch(err){state.aiStatus='offline';state.liveError='Не удалось загрузить локальный ИИ: '+(err?.message||'ошибка');}renderTeacher();}
       else if(a==='voice'){startVoiceInput();}
       else if(a==='send'){sendChat();}
     });
     root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=async()=>{
       state.settings.selectedLanguage=b.dataset.lang;
+      syncCourseData();
+      state.chat=initialChat();state.aiHistory=[];state.aiStatus=localAIGenerator?'ready':'idle';state.aiModel=localAIGenerator?LOCAL_AI_MODEL:'';state.aiProgress=localAIGenerator?'Локальный ИИ уже загружен.':'';state.liveError='';
       await saveSettings();
       document.getElementById('modal')?.remove();
       state.view='home';
@@ -3316,7 +3415,7 @@ window.SAUDI_WORDS = [
     const userText=inp.value.trim();if(!userText)return;
     state.chat.push({user:true,text:userText,hint:''});inp.value='';renderTeacher();liveSet('thinking','Думаю над ответом…');
     let reply='';
-    try{reply=await askAI(userText);}catch(err){console.warn(err);reply=coachReply(userText)[0];}
+    try{await connectAIFromUserAction();reply=await askAI(userText);}catch(err){console.warn(err);state.aiStatus='offline';state.liveError='Локальный ИИ сейчас не ответил — включена встроенная подсказка.';reply=coachReply(userText)[0];}
     state.chat.push({user:false,text:reply,hint:''});state.settings.speakingSessions++;state.settings.dailyPoints+=20;await saveSettings();renderTeacher();await speakNatural(reply,.72);
     if(state.liveActive)await beginAutoListening();
   }
