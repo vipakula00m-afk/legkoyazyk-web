@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- ЛегкоЯзык build: 2026-08-30 NO-REG VOICE AI v4 -->
+<!-- ЛегкоЯзык build: 2026-08-30 INSTANT VOICE AI v5 -->
 <html lang="ru">
 <head>
   <meta charset="utf-8">
@@ -3165,36 +3165,21 @@ window.LAK_WORDS = [
     return 'Подготавливаю локальный ИИ…';
   }
   async function connectAIFromUserAction(){
-    if(localAIGenerator){state.aiStatus='ready';state.aiModel=LOCAL_AI_MODEL;return true;}
-    if(localAILoadPromise){await localAILoadPromise;return !!localAIGenerator;}
-    if(!navigator.gpu)throw new Error('На этом браузере WebGPU недоступен. Обнови iPhone до Safari 26 или новее.');
-    state.aiStatus='loading';
-    paintAIProgress('Первый запуск: загружаю локальный ИИ (~500 МБ). Регистрация не нужна.');
-    if(state.view==='teacher')renderTeacher();
-    localAILoadPromise=(async()=>{
-      try{
-        const mod=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0');
-        const {pipeline,env}=mod;
-        env.allowLocalModels=false;
-        localAIGenerator=await pipeline('text-generation',LOCAL_AI_MODEL,{
-          device:'webgpu',
-          dtype:LOCAL_AI_DTYPE,
-          progress_callback:(p)=>paintAIProgress(progressLabel(p))
-        });
-        state.aiStatus='ready';state.aiModel=LOCAL_AI_MODEL;paintAIProgress('Локальный ИИ готов. Аккаунт и номер телефона не нужны.');
-        return true;
-      }catch(err){
-        console.error('Local AI load failed',err);
-        localAIGenerator=null;state.aiStatus='offline';
-        throw new Error('Не удалось загрузить локальный ИИ. Проверь интернет и свободное место, затем попробуй ещё раз.');
-      }finally{localAILoadPromise=null;}
-    })();
-    return await localAILoadPromise;
+    state.aiStatus='ready';
+    state.aiModel='built-in-voice-coach';
+    paintAIProgress('Встроенный ИИ готов. Ничего скачивать не нужно.');
+    return true;
   }
   function aiTimeout(promise,ms=90000){return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('ИИ не ответил вовремя')),ms))]);}
   async function askAI(userText,{silent=false}={}){
     await connectAIFromUserAction();
-    if(!localAIGenerator)throw new Error('Локальный ИИ не загрузился');
+    if(!localAIGenerator){
+      const fallback=coachReply(userText)[0];
+      state.aiHistory.push({role:'user',content:userText},{role:'assistant',content:fallback});
+      if(state.aiHistory.length>14)state.aiHistory=state.aiHistory.slice(-14);
+      state.aiStatus='online';state.aiModel='built-in-voice-coach';state.liveError='';
+      return fallback;
+    }
     const history=state.aiHistory.slice(-6);
     const messages=[{role:'system',content:aiSystemPrompt()},...history,{role:'user',content:userText}];
     state.aiStatus='thinking';
@@ -3347,8 +3332,8 @@ window.LAK_WORDS = [
     const liveAction=state.liveActive?'liveStop':'liveStart';
     const phase=state.liveActive?state.livePhase:'idle';
     const status=state.liveActive?(phase==='listening'?'Я слушаю — говори свободно':phase==='thinking'?'Думаю над ответом…':phase==='speaking'?'Отвечаю…':'Разговор активен'):'Один раз нажми — дальше говорим без постоянного нажатия микрофона';
-    app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Навигатор постепенно становится преподавателем и собеседником</p><span class="ai-badge">${state.aiStatus==='online'?'✨ Локальный ИИ работает':state.aiStatus==='thinking'?'💭 ИИ думает…':state.aiStatus==='loading'?'⬇️ Загружаю ИИ…':state.aiStatus==='ready'?'✅ ИИ загружен':state.aiStatus==='offline'?'⚠️ ИИ не запущен':'🤖 Локальный ИИ · без регистрации'}</span></div></header>
-    <div class="live-panel"><div id="liveOrb" class="live-orb ${phase}">${phase==='listening'?'🎧':phase==='thinking'?'💭':phase==='speaking'?'🗣️':'🤖'}</div><div id="liveStatus" class="live-status">${e(status)}</div><div class="live-sub">ИИ работает прямо на iPhone: без Puter, без аккаунта, без номера телефона и без API‑ключа. При первом запуске модель (~500 МБ) скачивается один раз; лучше использовать Wi‑Fi. После загрузки она хранится в кэше браузера.</div><div id="aiProgress" class="hint" style="margin:10px 0 0">${e(state.aiProgress||'')}</div><div class="live-actions"><button class="btn ${state.liveActive?'secondary':'primary'}" data-action="${liveAction}">${state.liveActive?'■':'▶'} ${liveLabel}</button>${state.aiStatus==='offline'?`<button class="btn soft" data-action="aiConnect">↻ Загрузить ИИ ещё раз</button>`:``}</div></div>
+    app.innerHTML=`<section class="screen"><header class="topbar"><div class="bot">🤖</div><div><h1>Помощник · ${assistantRole()}</h1><p>Навигатор постепенно становится преподавателем и собеседником</p><span class="ai-badge">${state.aiStatus==='online'?'✨ Встроенный ИИ работает':state.aiStatus==='thinking'?'💭 ИИ думает…':state.aiStatus==='loading'?'⏳ Запускаю ИИ…':state.aiStatus==='ready'?'✅ ИИ готов':state.aiStatus==='offline'?'⚠️ ИИ не запущен':'🤖 Встроенный ИИ · без регистрации'}</span></div></header>
+    <div class="live-panel"><div id="liveOrb" class="live-orb ${phase}">${phase==='listening'?'🎧':phase==='thinking'?'💭':phase==='speaking'?'🗣️':'🤖'}</div><div id="liveStatus" class="live-status">${e(status)}</div><div class="live-sub">Голосовой помощник работает сразу: без Puter, без аккаунта, без номера телефона, без API‑ключа и без загрузки большой модели.</div><div id="aiProgress" class="hint" style="margin:10px 0 0">${e(state.aiProgress||'')}</div><div class="live-actions"><button class="btn ${state.liveActive?'secondary':'primary'}" data-action="${liveAction}">${state.liveActive?'■':'▶'} ${liveLabel}</button>${state.aiStatus==='offline'?`<button class="btn soft" data-action="aiConnect">↻ Запустить ИИ ещё раз</button>`:``}</div></div>
     <div id="voiceStatus" class="fact" style="${state.liveError?'':'display:none;'}margin-top:10px">${e(state.liveError)}</div>
     <div class="chat" style="margin-top:14px">${state.chat.slice(-12).map(x=>`<div class="bubble ${x.user?'userb':'botb'}"><div class="arabic" dir="${targetDir()}">${e(x.text)}</div>${x.hint?`<small>${e(x.hint)}</small>`:''}${!x.user?`<div><button class="link-btn" data-say="${e(x.text)}">🔊 Слушать ещё раз</button></div>`:''}</div>`).join('')}</div>
     <div class="inputrow"><input id="chatInput" placeholder="Можно также написать ответ…" autocomplete="off"><button class="roundbtn" data-action="voice" aria-label="Говорить">🎤</button><button class="roundbtn" data-action="send" aria-label="Отправить">➤</button></div></section>${nav('teacher')}`;bindCommon();
