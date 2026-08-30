@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- ЛегкоЯзык build: 2026-08-23 LOCAL-AI + LAK v3 -->
+<!-- ЛегкоЯзык build: 2026-08-30 NO-REG VOICE AI v4 -->
 <html lang="ru">
 <head>
   <meta charset="utf-8">
@@ -3239,13 +3239,13 @@ window.LAK_WORDS = [
   }
   async function startLiveConversation(){
     if(state.liveActive)return;
-    try{await connectAIFromUserAction();}catch(err){state.aiStatus='offline';state.liveError='Не удалось запустить локальный ИИ: '+(err?.message||'ошибка');renderTeacher();return;}
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
     if(!SR){state.liveError='На этом устройстве автоматическое распознавание речи недоступно. Можно писать ответы внизу — локальный ИИ всё равно работает.';renderTeacher();return;}
     state.liveActive=true;state.liveError='';
     renderTeacher();
     liveSet('thinking','Начинаем разговор…');
     try{
+      await connectAIFromUserAction();
       const intro=await askAI('Начни со мной живой разговор прямо сейчас. Я только открыл приложение. Поздоровайся очень коротко и задай один лёгкий вопрос, подходящий моему уровню.');
       state.chat.push({user:false,text:intro,hint:''});
       renderTeacher();
@@ -3253,7 +3253,8 @@ window.LAK_WORDS = [
       if(state.liveActive)await beginAutoListening();
     }catch(err){
       console.warn(err);
-      state.liveError='Локальный ИИ не смог ответить. Можно продолжить короткими встроенными подсказками и попробовать снова.';
+      state.aiStatus='offline';
+      state.liveError='Работаю без регистрации во встроенном голосовом режиме.';
       const fallback='Привет! Давай совсем легко. شلونك؟ Как ты сегодня?';
       state.chat.push({user:false,text:fallback,hint:''});
       renderTeacher();
